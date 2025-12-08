@@ -1,0 +1,72 @@
+[project]
+name = "tools"
+version = "0.1.0"
+description = "Collection of command-line tools"
+requires-python = ">=3.12"
+dependencies = []
+
+[tool.mypy]
+# Strict mode
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_any_generics = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+strict_concatenate = true
+
+# Explicitly ban Any
+disallow_any_unimported = true
+disallow_any_expr = false  # Too strict, would break click decorators
+disallow_any_decorated = false  # Too strict for click
+disallow_any_explicit = true  # Ban explicit Any usage
+
+# Additional strictness
+no_implicit_optional = true
+show_error_codes = true
+show_column_numbers = true
+
+# Exclude test files from strict checking
+[[tool.mypy.overrides]]
+module = "tests.*"
+ignore_errors = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_functions = "test_*"
+addopts = "-v --strict-markers"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "N",   # pep8-naming
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "SIM", # flake8-simplify
+    "RUF", # ruff-specific
+]
+ignore = []
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]  # Allow assert in tests
+
+[tool.ruff.lint.isort]
+known-first-party = ["tools"]

@@ -1,0 +1,100 @@
+# Run with `uvx pre-commit run --all-files`
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-json
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: debug-statements
+      - id: mixed-line-ending
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.8
+    hooks:
+      - id: ruff-check
+        args: [--fix, --quiet]
+      - id: ruff-format
+        args: [--quiet]
+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.21.2
+    hooks:
+      - id: pyupgrade
+        args: [--py312-plus]
+
+  - repo: https://github.com/ikamensh/flynt/
+    rev: '1.0.6'
+    hooks:
+      - id: flynt
+
+  # Shellcheck for bash scripts
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.11.0.1
+    hooks:
+      - id: shellcheck
+
+  - repo: local
+    hooks:
+      # Basic checks
+      - id: check-python-syntax
+        name: check Python syntax
+        entry: uv run --no-project python -m py_compile
+        language: system
+        types: [python]
+
+      - id: check-executable
+        name: check scripts are executable
+        entry: uv run --no-project python ci/check_executable.py
+        language: system
+        files: ^(python/|bash/)
+        exclude: ^(python/README\.md|bash/README\.md)
+
+      # Custom repository standards
+      - id: check-no-argparse
+        name: check no argparse (use click)
+        entry: uv run --no-project python ci/check_no_argparse.py
+        language: system
+        types: [python]
+        files: ^python/
+
+      - id: check-no-print
+        name: check no print() (use click.echo)
+        entry: uv run --no-project python ci/check_no_print.py
+        language: system
+        types: [python]
+        files: ^python/
+
+      - id: check-main-guard
+        name: check if __name__ == __main__ guard
+        entry: uv run --no-project python ci/check_main_guard.py
+        language: system
+        types: [python]
+        files: ^python/
+
+      - id: check-no-any
+        name: check no typing.Any
+        entry: uv run --no-project python ci/check_no_any.py
+        language: system
+        types: [python]
+
+      # Type checking with strict mypy
+      - id: mypy
+        name: mypy (strict)
+        entry: bash -c 'if [ -n "$(find python -name "*.py" 2>/dev/null)" ]; then uvx --with mypy mypy python/ ci/; else echo "No Python files to check"; fi'
+        language: system
+        types: [python]
+        require_serial: true
+        pass_filenames: false
+
+      # Tests last
+      - id: pytest
+        name: pytest
+        entry: bash -c 'uvx --with pytest pytest tests/ || true'
+        language: system
+        pass_filenames: false
+        always_run: true
