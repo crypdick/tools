@@ -6,10 +6,10 @@ Python CLI tools runnable with `uv run`, using PEP 723 inline metadata for depen
 
 ```bash
 # From GitHub URL (no clone needed)
-uv run https://raw.githubusercontent.com/crypdick/tools/main/python/your-tool.py [args]
+uv run https://tools.ricardodecal.com/python/foo.py [args]
 
 # Locally
-uv run python/your-tool.py [args]
+uv run python/foo.py [args]
 ```
 
 ## Available Tools
@@ -54,13 +54,13 @@ if __name__ == "__main__":
 
 ```bash
 # Add dependencies
-uv add --script python/your-tool.py requests rich
+uv add --script python/foo.py requests rich
 
 # Remove dependencies
-uv remove --script python/your-tool.py rich
+uv remove --script python/foo.py rich
 
 # Update Python version requirement
-uv add --script python/your-tool.py --python ">=3.13"
+uv add --script python/foo.py --python ">=3.13"
 ```
 
 This automatically updates the `# /// script` block.
@@ -126,7 +126,7 @@ Create `tests/test_your_tool.py`:
 from pathlib import Path
 import subprocess
 
-TOOL = Path(__file__).parent.parent / "python" / "your-tool.py"
+TOOL = Path(__file__).parent.parent / "python" / "foo.py"
 
 def run_tool(*args):
     return subprocess.run(
@@ -219,25 +219,25 @@ click.echo(json.dumps(data, indent=2))
 
 ```bash
 # Create tool
-touch python/my-tool.py
-chmod +x python/my-tool.py
+touch python/foo.py
+chmod +x python/foo.py
 
 # Add template and basic code
 
 # Add dependencies
-uv add --script python/my-tool.py click requests
+uv add --script python/foo.py click requests
 
 # Test
-uv run python/my-tool.py --help
+uv run python/foo.py --help
 
 # Add tests
 touch tests/test_my_tool.py
 uv run pytest tests/test_my_tool.py -v
 
 # Commit
-git add python/my-tool.py tests/test_my_tool.py
-git commit -m "Add my-tool: description"
+git add python/foo.py tests/test_my_tool.py
+git commit -m "Add foo: description"
 
 # Test from URL after push
-uv run https://raw.githubusercontent.com/crypdick/tools/main/python/my-tool.py --help
+uv run https://tools.ricardodecal.com/python/foo.py --help
 ```

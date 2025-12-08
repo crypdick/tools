@@ -12,7 +12,7 @@ uv run pytest tests/ -v
 from pathlib import Path
 import subprocess
 
-TOOL = Path(__file__).parent.parent / "python" / "your-tool.py"
+TOOL = Path(__file__).parent.parent / "python" / "foo.py"
 
 def run_tool(*args):
     return subprocess.run(

@@ -10,12 +10,12 @@ Using `uv run` creates an ephemeral Python environment for execution, so these t
 
 ```bash
 # Run a Python tool from URL
-uv run https://raw.githubusercontent.com/crypdick/tools/main/python/your-tool.py
+uv run https://tools.ricardodecal.com/python/foo.py
 
 # Run locally
 git clone https://github.com/crypdick/tools.git
 cd tools
-uv run python/your-tool.py
+uv run python/foo.py
 ```
 
 ## Available Tools
