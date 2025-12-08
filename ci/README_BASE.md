@@ -19,5 +19,3 @@ Inspired by [Simon Willison's tools collection](https://github.com/simonw/tools)
 ## License
 
 [Apache 2.0](LICENSE)
-
-[ricardodecal.com](https://ricardodecal.com)

@@ -29,5 +29,3 @@ Options:
 ## License
 
 [Apache 2.0](LICENSE)
-
-[ricardodecal.com](https://ricardodecal.com)

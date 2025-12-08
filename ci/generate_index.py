@@ -189,6 +189,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         {content}
 
         <footer>
+            By Ricardo Decal. <a href="https://ricardodecal.com">ricardodecal.com</a><br>
             Generated from <a href="https://github.com/crypdick/tools">crypdick/tools</a>
         </footer>
     </div>
