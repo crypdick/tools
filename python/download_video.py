@@ -40,7 +40,7 @@ def main(url: str, output: str | None) -> None:
 
         uv run python/download_video.py https://x.com/SemiAnalysis_/status/1990449859321888935
 
-        uv run python/download_video.py https://www.youtube.com/watch?v=dQw4w9WgXcQ
+        uv run python/download_video.py https://www.youtube.com/watch?v=dQw4w9WgXcQ --output my_video.mp4
     """
     ydl_opts = {
         "format": "best",
