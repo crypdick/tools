@@ -8,13 +8,15 @@
 # ]
 # ///
 """
-Fetch YouTube transcripts for a single video or a whole playlist.
+Fetch YouTube transcripts for a single video or a whole playlist into a single flat text file.
 
-Takes a YouTube URL (video or playlist) and outputs all available transcripts
-into a single flat text file.
+Examples:
+    uv run https://tools.ricardodecal.com/python/yt_transcript.py "https://youtu.be/..." out.txt
+    uv run https://tools.ricardodecal.com/python/yt_transcript.py "https://youtube.com/playlist?list=..." out.txt
 
-Usage:
-    uv run https://tools.ricardodecal.com/python/yt_transcript.py [URL] [OUTPUT_FILE]@
+Options:
+    -l, --lang TEXT  Language codes to prefer (default: en, en-US, en-GB).
+                     Can be used multiple times (e.g. -l en -l fr).
 """
 
 # mypy: ignore-errors
@@ -117,6 +119,9 @@ def main(url: str, output_file: Path, lang: list[str]) -> None:
 
     URL: YouTube video or playlist URL.
     OUTPUT_FILE: Path to save the transcript text.
+
+    Options:
+        --lang, -l: Language codes to prefer (e.g. -l en -l fr). Default: en, en-US, en-GB
 
     Examples:
 

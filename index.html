@@ -166,60 +166,26 @@
             </a>
         </div>
 
-        <p>A collection of command-line utilities and scripts, organized by implementation language. Built to be simple, self-contained, and immediately runnable using <code>uv run</code>.</p>
-<blockquote>
-<p><strong>Note</strong>: Most of these tools are "vibe coded" but verified for functionality.</p>
-</blockquote>
-<h2>Quick Start</h2>
-<p>Using <code>uv run</code> creates an ephemeral Python environment for execution, so these tools won't pollute your system's global Python packages.</p>
-<pre><code class="language-bash"># Run a Python tool from URL
-uv run https://tools.ricardodecal.com/python/foo.py
-
-# Run locally
-git clone https://github.com/crypdick/tools.git
-cd tools
-uv run python/foo.py
-</code></pre>
+        <p>A collection of command-line utilities and scripts, written to be immediately runnable using <code>uv run https://tools.ricardodecal.com/python/foo.py</code>, which spawns a self-contained and ephemeral <a href="https://github.com/astral-sh/uv"><code>uv</code></a> Python environment.</p>
+<p>This is an experiment in low-stakes vibe coding. The code lives in <a href="https://github.com/crypdick/tools">crypdick/tools</a>.</p>
+<p>Inspired by <a href="https://github.com/simonw/tools">Simon Willison's tools collection</a>.</p>
 <h2>Available Tools</h2>
-<!-- Tools will be listed here as they are added -->
-
-<ul>
-<li><strong><a href="python/yt_transcript.py">yt_transcript.py</a></strong>
-  Fetch YouTube transcripts for a single video or a whole playlist.
-  <code>uv run https://tools.ricardodecal.com/python/yt_transcript.py https://www.youtube.com/watch?v=jNQXAC9IVRw</code></li>
-</ul>
+<h3><a href="python/yt_transcript.py">yt_transcript.py</a></h3>
+<p>Fetch YouTube transcripts for a single video or a whole playlist into a single flat text file.</p>
+<p>Examples:
+    uv run https://tools.ricardodecal.com/python/yt_transcript.py "https://youtu.be/..." out.txt
+    uv run https://tools.ricardodecal.com/python/yt_transcript.py "https://youtube.com/playlist?list=..." out.txt</p>
+<p>Options:
+    -l, --lang TEXT  Language codes to prefer (default: en, en-US, en-GB).
+                     Can be used multiple times (e.g. -l en -l fr).</p>
 <h2>Documentation</h2>
 <ul>
-<li><strong><a href="TOOLS_GUIDE.md">TOOLS_GUIDE.md</a></strong> - Opinionated guide on building tools for this repository</li>
-<li><strong><a href="python/README.md">python/README.md</a></strong> - Python tool patterns and templates</li>
-<li><strong><a href="bash/README.md">bash/README.md</a></strong> - Bash script patterns and templates</li>
-<li><strong><a href="tests/README.md">tests/README.md</a></strong> - Testing guide</li>
-</ul>
-<h2>Prerequisites</h2>
-<ul>
-<li>Python 3.12+ for Python tools</li>
-<li><a href="https://github.com/astral-sh/uv">uv</a> for running Python tools</li>
-<li>Bash 4.0+ for shell scripts</li>
-</ul>
-<h2>Philosophy</h2>
-<ul>
-<li><strong>Self-contained</strong>: Single-file tools when possible</li>
-<li><strong>Immediately runnable</strong>: <code>uv run</code> works without setup and without polluting your system's global Python packages.</li>
+<li><strong><a href="python/README.md">python/README.md</a></strong> - Python tool guide</li>
+<li><strong><a href="bash/README.md">bash/README.md</a></strong> - Bash script guide</li>
+<li><strong><a href="tests/README.md">tests/README.md</a></strong> - Testing guide.</li>
 </ul>
 <h2>License</h2>
 <p>Apache 2.0 - See <a href="LICENSE">LICENSE</a></p>
-<h2>Inspiration</h2>
-<p>Inspired by <a href="https://github.com/simonw/tools">Simon Willison's tools collection</a>.</p><div class="section"><h1>Python Tools Documentation</h1></div>
-
-    <div class="tool" id="yt_transcript.py">
-        <h2><a href="#python/yt_transcript.py">python/yt_transcript.py</a></h2>
-        <p>Fetch YouTube transcripts for a single video or a whole playlist.</p>
-<p>Takes a YouTube URL (video or playlist) and outputs all available transcripts
-into a single flat text file.</p>
-<p>Usage:
-    uv run https://tools.ricardodecal.com/python/yt_transcript.py [URL] [OUTPUT_FILE]@</p>
-    </div>
-
 
         <footer>
             Generated from <a href="https://github.com/crypdick/tools">crypdick/tools</a>

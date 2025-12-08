@@ -13,18 +13,8 @@ Inspired by [Simon Willison's tools collection](https://github.com/simonw/tools)
 
 ## Available Tools
 
-### [yt_transcript.py](python/yt_transcript.py)
-
-Fetch YouTube transcripts for a single video or a whole playlist into a single flat text file.
-
-Examples:
-    uv run https://tools.ricardodecal.com/python/yt_transcript.py "https://youtu.be/..." out.txt
-    uv run https://tools.ricardodecal.com/python/yt_transcript.py "https://youtube.com/playlist?list=..." out.txt
-
-Options:
-    -l, --lang TEXT  Language codes to prefer (default: en, en-US, en-GB).
-                     Can be used multiple times (e.g. -l en -l fr).
-
+<!-- TOOLS_START -->
+<!-- TOOLS_END -->
 
 ## Documentation
 

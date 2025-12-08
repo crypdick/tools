@@ -6,21 +6,17 @@
 # ]
 # ///
 """
-Generate index.html from README.md and tool docstrings.
+Generate index.html from README.md.
 """
 
-import ast
 import re
 from pathlib import Path
-from typing import NamedTuple
 
 import markdown
 
 ROOT = Path(__file__).parent.parent
 README_PATH = ROOT / "README.md"
 INDEX_PATH = ROOT / "index.html"
-PYTHON_DIR = ROOT / "python"
-DOMAIN = "tools.ricardodecal.com"
 
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html lang="en">
@@ -201,51 +197,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 """
 
 
-class ToolInfo(NamedTuple):
-    name: str
-    filename: str
-    docstring: str
-
-
-def extract_tool_info(path: Path) -> ToolInfo | None:
-    try:
-        content = path.read_text(encoding="utf-8")
-        tree = ast.parse(content)
-        docstring = ast.get_docstring(tree) or ""
-        return ToolInfo(
-            name=path.name,
-            filename=path.name,
-            docstring=docstring.strip(),
-        )
-    except Exception:
-        return None
-
-
-def format_tool(info: ToolInfo) -> str:
-    doc = info.docstring
-
-    # Replace generic "uv run python/script.py" with nifty domain URL
-    pattern = re.compile(rf"uv run python/{re.escape(info.filename)}")
-    replacement = f"uv run https://{DOMAIN}/python/{info.filename}"
-
-    # Also handle raw github URLs if present
-    raw_pattern = re.compile(
-        rf"https://raw\.githubusercontent\.com/[^/]+/[^/]+/[^/]+/python/{re.escape(info.filename)}"
-    )
-
-    doc = pattern.sub(replacement, doc)
-    doc = raw_pattern.sub(replacement, doc)
-
-    html_doc = markdown.markdown(doc, extensions=["fenced_code"])
-
-    return f"""
-    <div class="tool" id="{info.filename}">
-        <h2><a href="#{"python/" + info.filename}">python/{info.filename}</a></h2>
-        {html_doc}
-    </div>
-    """
-
-
 def generate_index() -> None:
     if not README_PATH.exists():
         print(f"Error: {README_PATH} not found.")
@@ -254,30 +205,20 @@ def generate_index() -> None:
     # 1. Process README
     content = README_PATH.read_text(encoding="utf-8")
 
+    # Remove HTML comments (e.g. markers and warnings)
+    content = re.sub(r"<!--.*?-->", "", content, flags=re.DOTALL)
+
+    # Remove leading whitespace which might be left after comment removal
+    content = content.lstrip()
+
     # Remove the title (first line level 1 header)
     content = re.sub(r"^# .+\s+", "", content)
 
     # Convert README to HTML
     html_content = markdown.markdown(content, extensions=["fenced_code", "tables"])
 
-    # 2. Process Python Tools
-    tools_html = []
-    if PYTHON_DIR.exists():
-        tools_html.append(
-            '<div class="section"><h1>Python Tools Documentation</h1></div>'
-        )
-        for path in sorted(PYTHON_DIR.glob("*.py")):
-            if path.name == "__init__.py":
-                continue
-            info = extract_tool_info(path)
-            if info:
-                tools_html.append(format_tool(info))
-
-    # Combine
-    full_content = html_content + "\n".join(tools_html)
-
     # Inject into template
-    final_html = HTML_TEMPLATE.replace("{content}", full_content)
+    final_html = HTML_TEMPLATE.replace("{content}", html_content)
 
     # Ensure single trailing newline and no trailing whitespace on lines
     lines = [line.rstrip() for line in final_html.splitlines()]

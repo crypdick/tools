@@ -82,8 +82,15 @@ repos:
         language: system
         types: [python]
 
+      - id: generate-readme
+        name: generate README.md from docstrings and README_BASE.md
+        entry: uv run ci/generate_readme.py
+        language: system
+        files: ^ci/README_BASE\.md$|^python/.*\.py$|^ci/generate_readme\.py$
+        pass_filenames: false
+
       - id: generate-index
-        name: generate index.html
+        name: generate index.html from README.md
         entry: uv run ci/generate_index.py
         language: system
         files: ^README\.md$|^ci/generate_index\.py$
