@@ -13,6 +13,42 @@ Inspired by [Simon Willison's tools collection](https://github.com/simonw/tools)
 
 ## Available Tools
 
+### [convert_arrow_to_parquet_streaming.py](python/convert_arrow_to_parquet_streaming.py)
+
+Output of `uv run https://tools.ricardodecal.com/python/convert_arrow_to_parquet_streaming.py --help`:
+
+```text
+Usage: convert_arrow_to_parquet_streaming.py [OPTIONS]
+
+  Convert Arrow shards to Parquet.
+
+  - Discovers all .arrow files under a given source directory - Converts each
+  file to Parquet - Uses streaming in order to keep memory bounded and convert
+  files larger than available RAM - Handles both Arrow IPC File and Stream
+  formats (tries file, falls back to stream)
+
+  Notes: - Use `--preserve-subdirs` to mirror the input directory tree under
+  the output dir. - Use `--overwrite` to re-create files; otherwise existing
+  outputs are skipped.
+
+  Arguments:
+      SOURCE_DIR: Directory containing .arrow files.
+      OUTPUT_DIR: Directory to write .parquet files.
+
+  Examples:
+
+      uv run https://tools.ricardodecal.com/python/convert_arrow_to_parquet_streaming.py --source-dir ./arrow_data --output-dir ./parquet_data
+      uv run https://tools.ricardodecal.com/python/convert_arrow_to_parquet_streaming.py --source-dir ./arrow_data --output-dir ./parquet_data --preserve-subdirs
+
+Options:
+  --source-dir DIRECTORY  Directory containing .arrow files  [required]
+  --output-dir DIRECTORY  Directory to write .parquet files
+  --overwrite             Overwrite existing parquet files
+  --preserve-subdirs      Preserve input subdirectory structure inside output
+                          dir
+  --help                  Show this message and exit.
+```
+
 ### [yt_transcript.py](python/yt_transcript.py)
 
 Output of `uv run https://tools.ricardodecal.com/python/yt_transcript.py --help`:

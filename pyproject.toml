@@ -35,17 +35,6 @@ no_implicit_optional = true
 show_error_codes = true
 show_column_numbers = true
 
-# Exclude test files from strict checking
-[[tool.mypy.overrides]]
-module = "tests.*"
-ignore_errors = true
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-python_files = "test_*.py"
-python_functions = "test_*"
-addopts = "-v --strict-markers"
-
 [tool.ruff]
 target-version = "py312"
 
@@ -63,9 +52,6 @@ select = [
     "RUF", # ruff-specific
 ]
 ignore = ["E501"]
-
-[tool.ruff.lint.per-file-ignores]
-"tests/*" = ["S101"]  # Allow assert in tests
 
 [tool.ruff.lint.isort]
 known-first-party = ["tools"]

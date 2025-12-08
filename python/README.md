@@ -12,12 +12,6 @@ uv run https://tools.ricardodecal.com/python/foo.py [args]
 uv run python/foo.py [args]
 ```
 
-## Available Tools
-
-- `yt_transcript.py`: Fetch YouTube transcripts for a single video or a whole playlist into a single file.
-
----
-
 ## Creating Tools
 
 ### Required Structure
@@ -25,8 +19,9 @@ uv run python/foo.py [args]
 **CRITICAL:** The tool's `--help` output is used to **auto-generate the main README.md and the website**.
 
 - Ensure your tool supports `--help` (standard with `click`).
-- The docstring of your main command function (decorated with `@click.command`) provides the help description.
-- Keep the first line as a clear, concise summary.
+- **Module Docstring**: Keep the top-level module docstring to a single sentence summary.
+- **Main Docstring**: The docstring of your main command function (decorated with `@click.command`) provides the full help description.
+- Keep the first line of the main docstring as a clear, concise summary.
 - Manually document `@click.argument` arguments in an `Arguments:` section (Click does not auto-document them).
 - Include concrete `Examples:` section showing exactly how to run it.
 - Do not use generic `Usage:` placeholders.
@@ -51,6 +46,9 @@ import click
 def main(name: str, output: str | None) -> None:
     """
     Tool description that will be used to auto-generate the main README.md and the website.
+
+    This docstring is the source of truth for the tool's documentation.
+    It should include a detailed description, arguments list, and usage examples.
 
     Arguments:
         NAME: The name of the person to greet.
@@ -135,40 +133,6 @@ console.print(table)
 for item in track(items, description="Processing..."):
     process(item)
 ```
-
----
-
-## Testing
-
-Create `tests/test_your_tool.py`:
-
-```python
-from pathlib import Path
-import subprocess
-
-TOOL = Path(__file__).parent.parent / "python" / "foo.py"
-
-def run_tool(*args):
-    return subprocess.run(
-        ["uv", "run", str(TOOL), *args],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-
-def test_help():
-    result = run_tool("--help")
-    assert result.returncode == 0
-    assert "Usage:" in result.stdout
-
-def test_basic():
-    result = run_tool("arg")
-    assert result.returncode == 0
-```
-
-Run: `uv run pytest tests/test_your_tool.py -v`
-
-See [tests/README.md](../tests/README.md) for details.
 
 ---
 
@@ -258,12 +222,11 @@ uv add --script python/foo.py click requests
 # Test
 uv run python/foo.py --help
 
-# Add tests
-touch tests/test_my_tool.py
-uv run pytest tests/test_my_tool.py -v
+# Bump dependencies to latest versions
+uv remove --script python/foo.py click requests && uv add --script python/foo.py click requests
 
 # Commit
-git add python/foo.py tests/test_my_tool.py
+git add python/foo.py
 git commit -m "Add foo: description"
 
 # Test from URL after push
