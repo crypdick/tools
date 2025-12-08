@@ -4,7 +4,7 @@ Self-contained bash scripts for system automation and CLI tasks.
 
 ## Running Scripts
 
-```bash
+```shell
 chmod +x bash/script.sh
 ./bash/script.sh [OPTIONS]
 ```
@@ -19,7 +19,7 @@ chmod +x bash/script.sh
 
 ### Required Structure
 
-```bash
+```shell
 #!/usr/bin/env bash
 # Description: What this script does
 # Usage: ./script.sh [OPTIONS]
@@ -61,7 +61,7 @@ main "$@"
 
 ### Standard Pattern
 
-```bash
+```shell
 set -euo pipefail  # Fail fast
 
 error() {
@@ -76,7 +76,7 @@ command -v jq &> /dev/null || error "jq not installed"
 
 ### Checking Dependencies
 
-```bash
+```shell
 for cmd in jq curl git; do
     command -v "$cmd" &> /dev/null || {
         echo "Error: $cmd not installed" >&2
@@ -89,7 +89,7 @@ done
 
 ## Argument Parsing
 
-```bash
+```shell
 VERBOSE=false
 OUTPUT=""
 
@@ -125,7 +125,7 @@ done
 
 ### Colors (Optional)
 
-```bash
+```shell
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -138,7 +138,7 @@ warning() { echo -e "${YELLOW}Warning:${NC} $*" >&2; }
 
 ### Verbose Mode
 
-```bash
+```shell
 verbose() {
     [ "$VERBOSE" = true ] && echo "[VERBOSE] $*" >&2
 }
@@ -148,7 +148,7 @@ verbose() {
 
 ## File Operations
 
-```bash
+```shell
 # Read file line by line
 while IFS= read -r line; do
     echo "$line"
@@ -171,7 +171,7 @@ basename="${filename%.*}"
 
 ### User Confirmation
 
-```bash
+```shell
 read -r -p "Continue? [y/N] " response
 case "$response" in
     [yY][eE][sS]|[yY])
@@ -185,7 +185,7 @@ esac
 
 ### Retry Logic
 
-```bash
+```shell
 retry() {
     local max=$1; shift
     local attempt=1
@@ -204,7 +204,7 @@ retry 3 curl -f https://example.com/file
 
 ### JSON with jq
 
-```bash
+```shell
 # Parse JSON
 name=$(jq -r '.name' < file.json)
 
@@ -219,7 +219,7 @@ jq -n --arg name "value" '{name: $name, count: 42}'
 
 ## Testing
 
-```bash
+```shell
 # Syntax check
 bash -n bash/script.sh
 

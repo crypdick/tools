@@ -4,7 +4,7 @@ Python CLI tools runnable with `uv run`, using PEP 723 inline metadata for depen
 
 ## Running Tools
 
-```bash
+```shell
 # From GitHub URL (no clone needed)
 uv run https://tools.ricardodecal.com/python/foo.py [args]
 
@@ -25,7 +25,7 @@ uv run python/foo.py [args]
 **CRITICAL:** The module-level docstring (at the top of the file) is used to **auto-generate the main README.md and the website**.
 
 - Keep the first line as a clear, concise summary.
-- Include concrete `Examples:` section showing exactly how to run it.
+- Include concrete `Examples:` section showing exactly how to run it (use markdown code blocks).
 - Do not use generic `Usage:` placeholders.
 
 ```python
@@ -40,7 +40,11 @@ uv run python/foo.py [args]
 Tool description.
 
 Examples:
-    uv run https://tools.ricardodecal.com/python/tool.py arg1
+
+```shell
+uv run https://tools.ricardodecal.com/python/tool.py arg1
+```
+
 """
 
 import click
@@ -51,15 +55,16 @@ def main(name: str) -> None:
     """Help text for --help."""
     click.echo(f"Hello, {name}!")
 
-if __name__ == "__main__":
+if **name** == "**main**":
     main()
+
 ```
 
 ### Managing Dependencies
 
 **NEVER manually edit the PEP 723 metadata block.** Use `uv` commands:
 
-```bash
+```shell
 # Add dependencies
 uv add --script python/foo.py requests rich
 
@@ -225,7 +230,7 @@ click.echo(json.dumps(data, indent=2))
 
 ## Workflow
 
-```bash
+```shell
 # Create tool
 touch python/foo.py
 chmod +x python/foo.py

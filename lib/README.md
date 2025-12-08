@@ -5,6 +5,7 @@ This directory contains shared code and utilities used by multiple tools in this
 ## Purpose
 
 The `lib/` directory is for:
+
 - Common functions used across multiple tools
 - Utility modules
 - Shared configuration
@@ -49,7 +50,7 @@ Note: This approach only works for local execution, not for `uv run` from URLs.
 
 Source shared bash functions:
 
-```bash
+```shell
 #!/usr/bin/env bash
 
 # Get the directory where this script is located
@@ -84,7 +85,7 @@ def format_output(message: str, color: str = "default") -> str:
 
 ### Bash Library Module
 
-```bash
+```shell
 # lib/common.sh
 # Common bash functions
 

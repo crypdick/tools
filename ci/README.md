@@ -10,7 +10,7 @@
 
 ## Usage
 
-```bash
+```shell
 # Run all checks
 uvx pre-commit run --all-files
 

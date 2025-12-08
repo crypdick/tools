@@ -36,7 +36,7 @@ Add a DNS record in Cloudflare to point `tools.ricardodecal.com` to GitHub Pages
 
 Wait 5-15 minutes, then check:
 
-```bash
+```shell
 dig tools.ricardodecal.com
 # Should show CNAME pointing to crypdick.github.io
 
@@ -81,7 +81,7 @@ After HTTPS is working:
 
 Before pushing changes, test your `index.html`:
 
-```bash
+```shell
 python3 -m http.server 8000
 # Visit http://localhost:8000
 ```
@@ -100,7 +100,7 @@ Monitor at: <https://github.com/crypdick/tools/actions>
 
 Run `gh run list --limit 5` to see recent workflow runs:
 
-```bash
+```shell
 cd /Users/rdecal/src/PERSONAL/tools
 gh run list --limit 5
 ```

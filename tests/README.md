@@ -2,7 +2,7 @@
 
 ## Running Tests
 
-```bash
+```shell
 uv run pytest tests/ -v
 ```
 
@@ -36,7 +36,7 @@ Why `uv run`: Installs dependencies from PEP 723 metadata automatically.
 
 ## Bash Scripts
 
-```bash
+```shell
 shellcheck bash/script.sh
 ```
 
