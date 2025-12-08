@@ -7,6 +7,7 @@
 - `check_no_print.py` - Use `click.echo()`, not `print()`
 - `check_main_guard.py` - Require `if __name__ == "__main__":`
 - `check_no_any.py` - Ban `typing.Any`
+- `check_help.py` - Ensure scripts support `--help`
 
 ## Usage
 
