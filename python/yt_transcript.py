@@ -101,7 +101,9 @@ def get_transcript_text(
 
 @click.command()
 @click.argument("url")
-@click.argument("output_file", type=click.Path(writable=True, path_type=Path))
+@click.argument(
+    "output_file", type=click.Path(writable=True, path_type=Path), required=False
+)
 @click.option(
     "--lang",
     "-l",
@@ -109,19 +111,24 @@ def get_transcript_text(
     default=["en", "en-US", "en-GB"],
     help="Language codes to prefer (e.g. -l en -l fr)",
 )
-def main(url: str, output_file: Path, lang: list[str]) -> None:
+def main(url: str, output_file: Path | None, lang: list[str]) -> None:
     """
     Download transcripts from a YouTube URL (video or playlist) to a single file.
 
-    URL: YouTube video or playlist URL.
-    OUTPUT_FILE: Path to save the transcript text.
+    \b
+    Arguments:
+        URL: YouTube video or playlist URL.
+        OUTPUT_FILE: Path to save the transcript text. Defaults to transcript.txt.
 
     Examples:
 
-        uv run python/yt_transcript.py "https://youtu.be/..." out.txt
-
+    \b
+        uv run python/yt_transcript.py "https://youtu.be/..."
         uv run python/yt_transcript.py "https://youtube.com/playlist?list=..." out.txt
     """
+    if output_file is None:
+        output_file = Path.cwd() / "transcript.txt"
+
     videos = get_video_list(url)
 
     if not videos:

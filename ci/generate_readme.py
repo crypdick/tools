@@ -4,11 +4,11 @@
 # dependencies = []
 # ///
 """
-Generate README.md from tool docstrings.
+Generate README.md from tool --help output.
 """
 
-import ast
 import re
+import subprocess
 from pathlib import Path
 from typing import NamedTuple
 
@@ -25,25 +25,40 @@ END_MARKER = "<!-- TOOLS_END -->"
 class ToolInfo(NamedTuple):
     name: str
     filename: str
-    docstring: str
+    help_output: str
+
+
+def get_tool_help(path: Path) -> str:
+    # Run from repo root
+    try:
+        result = subprocess.run(
+            ["uv", "run", str(path), "--help"],
+            capture_output=True,
+            text=True,
+            cwd=ROOT,
+            check=True,
+        )
+        return result.stdout
+    except subprocess.CalledProcessError as e:
+        print(f"Error running {path.name} --help: {e.stderr}")
+        raise
+    except Exception as e:
+        print(f"Error executing {path.name}: {e}")
+        raise
 
 
 def extract_tool_info(path: Path) -> ToolInfo | None:
-    try:
-        content = path.read_text(encoding="utf-8")
-        tree = ast.parse(content)
-        docstring = ast.get_docstring(tree) or ""
-        return ToolInfo(
-            name=path.name,
-            filename=path.name,
-            docstring=docstring.strip(),
-        )
-    except Exception:
-        return None
+    help_output = get_tool_help(path)
+
+    return ToolInfo(
+        name=path.name,
+        filename=path.name,
+        help_output=help_output,
+    )
 
 
 def format_tool_readme(info: ToolInfo) -> str:
-    doc = info.docstring
+    doc = info.help_output
 
     # Replace generic "uv run python/script.py" with nifty domain URL
     pattern = re.compile(rf"uv run python/{re.escape(info.filename)}")
@@ -57,11 +72,13 @@ def format_tool_readme(info: ToolInfo) -> str:
     doc = pattern.sub(replacement, doc)
     doc = raw_pattern.sub(replacement, doc)
 
-    # We want to format it as a list item with the filename linking to the file
-    # Then the full docstring indented.
-
+    # Format as list item with filename linking to file
+    # Then the help output in a text block
     output = f"### [{info.filename}](python/{info.filename})\n\n"
-    output += f"{doc}\n"
+    output += f"Output of `uv run https://{DOMAIN}/python/{info.filename} --help`:\n\n"
+    output += "```text\n"
+    output += f"{doc}"
+    output += "```\n"
 
     return output
 
@@ -85,14 +102,14 @@ def generate_readme() -> None:
         for path in sorted(PYTHON_DIR.glob("*.py")):
             if path.name == "__init__.py":
                 continue
+
+            print(f"Processing {path.name}...")
             info = extract_tool_info(path)
-            if info:
-                tools_md.append(format_tool_readme(info))
+            tools_md.append(format_tool_readme(info))
 
     tools_content = "\n".join(tools_md)
 
     # Replace content between markers
-    # We use string slicing instead of regex to avoid issues with backslashes in docstrings
     start_idx = content.find(START_MARKER)
     end_idx = content.find(END_MARKER)
 
@@ -102,13 +119,14 @@ def generate_readme() -> None:
         )
         return
 
-    # We want to remove the markers from the output
-    # content[:start_idx] includes everything before the start marker
-    # content[end_idx + len(END_MARKER):] includes everything after the end marker
     new_content = (
-        content[:start_idx] + tools_content + content[end_idx + len(END_MARKER) :]
+        content[:start_idx]
+        + tools_content
+        + "\n"
+        + content[end_idx + len(END_MARKER) :]
     )
 
+    # Check if README exists
     current_content = ""
     if README_PATH.exists():
         current_content = README_PATH.read_text(encoding="utf-8")

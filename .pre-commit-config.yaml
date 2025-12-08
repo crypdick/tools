@@ -82,13 +82,6 @@ repos:
         language: system
         types: [python]
 
-      - id: check-help
-        name: check --help support
-        entry: uv run --no-project python ci/check_help.py
-        language: system
-        types: [python]
-        files: ^python/
-
       - id: generate-readme
         name: generate README.md from docstrings and README_BASE.md
         entry: uv run ci/generate_readme.py

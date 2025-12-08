@@ -22,10 +22,13 @@ uv run python/foo.py [args]
 
 ### Required Structure
 
-**CRITICAL:** The module-level docstring (at the top of the file) is used to **auto-generate the main README.md and the website**.
+**CRITICAL:** The tool's `--help` output is used to **auto-generate the main README.md and the website**.
 
+- Ensure your tool supports `--help` (standard with `click`).
+- The docstring of your main command function (decorated with `@click.command`) provides the help description.
 - Keep the first line as a clear, concise summary.
-- Include concrete `Examples:` section showing exactly how to run it (use markdown code blocks).
+- Manually document `@click.argument` arguments in an `Arguments:` section (Click does not auto-document them).
+- Include concrete `Examples:` section showing exactly how to run it.
 - Do not use generic `Usage:` placeholders.
 
 ```python
@@ -37,25 +40,30 @@ uv run python/foo.py [args]
 # ]
 # ///
 """
-Tool description.
-
-Examples:
-
-```shell
-uv run https://tools.ricardodecal.com/python/tool.py arg1
-```
-
+A 1-sentence description of the tool.
 """
 
 import click
 
 @click.command()
 @click.argument("name")
-def main(name: str) -> None:
-    """Help text for --help."""
-    click.echo(f"Hello, {name}!")
+@click.option("--output", type=click.Path(), default=None, help="Output file (optional)")
+def main(name: str, output: str | None) -> None:
+    """
+    Tool description that will be used to auto-generate the main README.md and the website.
 
-if **name** == "**main**":
+    Arguments:
+        NAME: The name of the person to greet.
+
+    Examples:
+
+        uv run https://tools.ricardodecal.com/python/tool.py arg1
+    """
+    click.echo(f"Hello, {name}!")
+    if output:
+        Path(output).write_text(f"Hello {name}")
+
+if __name__ == "__main__":
     main()
 
 ```
@@ -170,8 +178,11 @@ See [tests/README.md](../tests/README.md) for details.
 
 ```python
 @click.argument("input", type=click.File("r"), default="-")
-@click.argument("output", type=click.File("w"), default="-")
+@click.argument("output", type=click.File("w"), required=False)
 def main(input, output):
+    if output is None:
+        output = open("output.txt", "w")
+
     for line in input:
         output.write(line.upper())
 ```
@@ -182,10 +193,14 @@ def main(input, output):
 from pathlib import Path
 
 @click.argument("directory", type=click.Path(exists=True))
-def main(directory):
+@click.option("--output-dir", type=click.Path(), default=".")
+def main(directory, output_dir):
     path = Path(directory)
+    out = Path(output_dir)
+    out.mkdir(exist_ok=True)
+
     for file in path.glob("*.txt"):
-        process(file)
+        process(file, out)
 ```
 
 ### HTTP Requests
