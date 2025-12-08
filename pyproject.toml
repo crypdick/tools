@@ -62,7 +62,7 @@ select = [
     "SIM", # flake8-simplify
     "RUF", # ruff-specific
 ]
-ignore = []
+ignore = ["E501"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["S101"]  # Allow assert in tests

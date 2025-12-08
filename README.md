@@ -24,7 +24,7 @@ uv run python/your-tool.py
 
 - **[yt_transcript.py](python/yt_transcript.py)**
   Fetch YouTube transcripts for a single video or a whole playlist.
-  `uv run https://raw.githubusercontent.com/crypdick/tools/main/python/yt_transcript.py https://www.youtube.com/watch?v=jNQXAC9IVRw`
+  `uv run https://tools.ricardodecal.com/python/yt_transcript.py https://www.youtube.com/watch?v=jNQXAC9IVRw`
 
 ## Documentation
 

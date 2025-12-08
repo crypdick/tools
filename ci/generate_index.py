@@ -279,6 +279,10 @@ def generate_index() -> None:
     # Inject into template
     final_html = HTML_TEMPLATE.replace("{content}", full_content)
 
+    # Ensure single trailing newline and no trailing whitespace on lines
+    lines = [line.rstrip() for line in final_html.splitlines()]
+    final_html = "\n".join(lines) + "\n"
+
     INDEX_PATH.write_text(final_html, encoding="utf-8")
     print(f"Successfully generated {INDEX_PATH}")
 

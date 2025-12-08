@@ -14,7 +14,7 @@ Takes a YouTube URL (video or playlist) and outputs all available transcripts
 into a single flat text file.
 
 Usage:
-    uv run python/yt_transcript.py [URL] [OUTPUT_FILE]
+    uv run https://tools.ricardodecal.com/python/yt_transcript.py [URL] [OUTPUT_FILE]@
 """
 
 # mypy: ignore-errors
@@ -120,9 +120,9 @@ def main(url: str, output_file: Path, lang: list[str]) -> None:
 
     Examples:
 
-        uv run python/yt_transcript.py "https://youtu.be/..." out.txt
+        uv run https://tools.ricardodecal.com/python/yt_transcript.py "https://youtu.be/..." out.txt
 
-        uv run python/yt_transcript.py "https://youtube.com/playlist?list=..." out.txt
+        uv run https://tools.ricardodecal.com/python/yt_transcript.py "https://youtube.com/playlist?list=..." out.txt
     """
     videos = get_video_list(url)
 
