@@ -7,7 +7,7 @@ Edit ci/README_BASE.md or the tool docstrings instead.
 
 A collection of command-line utilities and scripts, written to be immediately runnable using `uv run https://tools.ricardodecal.com/python/foo.py`, which spawns a self-contained and ephemeral [`uv`](https://github.com/astral-sh/uv) Python environment.
 
-This is an experiment in low-stakes vibe coding. The code lives in [crypdick/tools](https://github.com/crypdick/tools).
+This is an experiment in low-stakes vibe coding. The code lives in [`crypdick/tools`](https://github.com/crypdick/tools).
 
 Inspired by [Simon Willison's tools collection](https://github.com/simonw/tools).
 
@@ -16,13 +16,8 @@ Inspired by [Simon Willison's tools collection](https://github.com/simonw/tools)
 <!-- TOOLS_START -->
 <!-- TOOLS_END -->
 
-## Documentation
-
-- **[python/README.md](python/README.md)** - Python tool guide
-- **[bash/README.md](bash/README.md)** - Bash script guide
-- **[tests/README.md](tests/README.md)** - Testing guide.
-
-
 ## License
 
-Apache 2.0 - See [LICENSE](LICENSE)
+[Apache 2.0](LICENSE)
+
+[ricardodecal.com](https://ricardodecal.com)

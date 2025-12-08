@@ -93,7 +93,7 @@ repos:
         name: generate index.html from README.md
         entry: uv run ci/generate_index.py
         language: system
-        files: ^README\.md$|^ci/generate_index\.py$
+        files: ^README\.md$|^ci/generate_index\.py$|^ci/README_BASE\.md$|^python/.*\.py$|^ci/generate_readme\.py$
         pass_filenames: false
 
       # Type checking with strict mypy
