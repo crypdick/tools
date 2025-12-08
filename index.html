@@ -68,9 +68,19 @@
 
         h2 {
             font-size: 1.5rem;
-            margin: 1.5rem 0 1rem;
+            margin: 2rem 0 1rem;
             padding-bottom: 0.3rem;
             border-bottom: 1px solid var(--border);
+        }
+
+        h2 a {
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        h2 a:hover {
+            color: var(--link);
+            text-decoration: underline;
         }
 
         p {
@@ -130,6 +140,10 @@
 
         .tools-list li {
             margin: 0.5rem 0;
+        }
+
+        .tool {
+            margin-top: 3rem;
         }
 
         footer {
@@ -195,8 +209,21 @@ uv run python/your-tool.py
 <h2>License</h2>
 <p>Apache 2.0 - See <a href="LICENSE">LICENSE</a></p>
 <h2>Inspiration</h2>
-<p>Inspired by <a href="https://github.com/simonw/tools">Simon Willison's tools collection</a>.</p>
+<p>Inspired by <a href="https://github.com/simonw/tools">Simon Willison's tools collection</a>.</p><div class="section"><h1>Python Tools Documentation</h1></div>
 
+    <div class="tool" id="yt_transcript.py">
+        <h2><a href="#python/yt_transcript.py">python/yt_transcript.py</a></h2>
+        <p>Fetch YouTube transcripts for a single video or a whole playlist.</p>
+<p>Takes a YouTube URL (video or playlist) and outputs all available transcripts
+into a single flat text file.</p>
+<p>Usage:
+    uv run https://tools.ricardodecal.com/python/yt_transcript.py [URL] [OUTPUT_FILE]</p>
+    </div>
+    
+
+        <footer>
+            Generated from <a href="https://github.com/crypdick/tools">crypdick/tools</a>
+        </footer>
     </div>
 </body>
 </html>
