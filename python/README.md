@@ -22,6 +22,12 @@ uv run python/foo.py [args]
 
 ### Required Structure
 
+**CRITICAL:** The module-level docstring (at the top of the file) is used to **auto-generate the main README.md and the website**.
+
+- Keep the first line as a clear, concise summary.
+- Include concrete `Examples:` section showing exactly how to run it.
+- Do not use generic `Usage:` placeholders.
+
 ```python
 #!/usr/bin/env python3
 # /// script
@@ -33,7 +39,8 @@ uv run python/foo.py [args]
 """
 Tool description.
 
-Usage: uv run tool.py [OPTIONS] ARGS
+Examples:
+    uv run https://tools.ricardodecal.com/python/tool.py arg1
 """
 
 import click
@@ -212,6 +219,7 @@ click.echo(json.dumps(data, indent=2))
 ❌ Forgetting `if __name__ == "__main__":`
 ❌ No type hints
 ❌ Silent exception handling
+❌ Generic "Usage" in docstring instead of real "Examples"
 
 ---
 
