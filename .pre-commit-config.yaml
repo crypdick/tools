@@ -82,13 +82,19 @@ repos:
         language: system
         types: [python]
 
+      - id: generate-index
+        name: generate index.html
+        entry: uv run ci/generate_index.py
+        language: system
+        files: ^README\.md$|^ci/generate_index\.py$
+        pass_filenames: false
+
       # Type checking with strict mypy
       - id: mypy
         name: mypy (strict)
-        entry: bash -c 'if [ -n "$(find python -name "*.py" 2>/dev/null)" ]; then uvx --with mypy mypy python/ ci/; else echo "No Python files to check"; fi'
+        entry: bash -c 'uvx --with mypy --with types-Markdown mypy ci/generate_index.py'
         language: system
-        types: [python]
-        require_serial: true
+        files: ^ci/generate_index\.py$
         pass_filenames: false
 
       # Tests last

@@ -1,8 +1,12 @@
-# tools
+# Ricardo Decal's Tools
 
 A collection of command-line utilities and scripts, organized by implementation language. Built to be simple, self-contained, and immediately runnable using `uv run`.
 
+> **Note**: Most of these tools are "vibe coded" but verified for functionality.
+
 ## Quick Start
+
+Using `uv run` creates an ephemeral Python environment for execution, so these tools won't pollute your system's global Python packages.
 
 ```bash
 # Run a Python tool from URL
@@ -14,22 +18,13 @@ cd tools
 uv run python/your-tool.py
 ```
 
-## Repository Structure
-
-```
-tools/
-├── python/          # Python CLI tools (see python/README.md)
-├── bash/            # Bash scripts (see bash/README.md)
-├── lib/             # Shared library code
-├── tests/           # Automated tests (see tests/README.md)
-└── .github/         # GitHub Actions workflows
-```
-
 ## Available Tools
 
 <!-- Tools will be listed here as they are added -->
 
-*No tools yet - start by reading [TOOLS_GUIDE.md](TOOLS_GUIDE.md) for opinionated guidance on creating tools.*
+- **[yt_transcript.py](python/yt_transcript.py)**
+  Fetch YouTube transcripts for a single video or a whole playlist.
+  `uv run https://raw.githubusercontent.com/crypdick/tools/main/python/yt_transcript.py https://www.youtube.com/watch?v=jNQXAC9IVRw`
 
 ## Documentation
 
@@ -37,7 +32,6 @@ tools/
 - **[python/README.md](python/README.md)** - Python tool patterns and templates
 - **[bash/README.md](bash/README.md)** - Bash script patterns and templates
 - **[tests/README.md](tests/README.md)** - Testing guide
-- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines
 
 ## Prerequisites
 
@@ -48,10 +42,7 @@ tools/
 ## Philosophy
 
 - **Self-contained**: Single-file tools when possible
-- **Immediately runnable**: `uv run` works without setup
-- **Well-documented**: Clear usage instructions and examples
-- **Simple**: Prefer simplicity over cleverness
-- **Tested**: All tools validated via CI/CD
+- **Immediately runnable**: `uv run` works without setup and without polluting your system's global Python packages.
 
 ## License
 

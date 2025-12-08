@@ -1,4 +1,24 @@
-<!DOCTYPE html>
+#!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#     "markdown",
+# ]
+# ///
+"""
+Generate index.html from README.md.
+"""
+
+import re
+from pathlib import Path
+
+import markdown
+
+ROOT = Path(__file__).parent.parent
+README_PATH = ROOT / "README.md"
+INDEX_PATH = ROOT / "index.html"
+
+HTML_TEMPLATE = """<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -152,51 +172,35 @@
             </a>
         </div>
 
-        <p>A collection of command-line utilities and scripts, organized by implementation language. Built to be simple, self-contained, and immediately runnable using <code>uv run</code>.</p>
-<blockquote>
-<p><strong>Note</strong>: Most of these tools are "vibe coded" but verified for functionality.</p>
-</blockquote>
-<h2>Quick Start</h2>
-<p>Using <code>uv run</code> creates an ephemeral Python environment for execution, so these tools won't pollute your system's global Python packages.</p>
-<pre><code class="language-bash"># Run a Python tool from URL
-uv run https://raw.githubusercontent.com/crypdick/tools/main/python/your-tool.py
-
-# Run locally
-git clone https://github.com/crypdick/tools.git
-cd tools
-uv run python/your-tool.py
-</code></pre>
-<h2>Available Tools</h2>
-<!-- Tools will be listed here as they are added -->
-
-<ul>
-<li><strong><a href="python/yt_transcript.py">yt_transcript.py</a></strong>
-  Fetch YouTube transcripts for a single video or a whole playlist.
-  <code>uv run https://raw.githubusercontent.com/crypdick/tools/main/python/yt_transcript.py https://www.youtube.com/watch?v=jNQXAC9IVRw</code></li>
-</ul>
-<h2>Documentation</h2>
-<ul>
-<li><strong><a href="TOOLS_GUIDE.md">TOOLS_GUIDE.md</a></strong> - Opinionated guide on building tools for this repository</li>
-<li><strong><a href="python/README.md">python/README.md</a></strong> - Python tool patterns and templates</li>
-<li><strong><a href="bash/README.md">bash/README.md</a></strong> - Bash script patterns and templates</li>
-<li><strong><a href="tests/README.md">tests/README.md</a></strong> - Testing guide</li>
-</ul>
-<h2>Prerequisites</h2>
-<ul>
-<li>Python 3.12+ for Python tools</li>
-<li><a href="https://github.com/astral-sh/uv">uv</a> for running Python tools</li>
-<li>Bash 4.0+ for shell scripts</li>
-</ul>
-<h2>Philosophy</h2>
-<ul>
-<li><strong>Self-contained</strong>: Single-file tools when possible</li>
-<li><strong>Immediately runnable</strong>: <code>uv run</code> works without setup and without polluting your system's global Python packages.</li>
-</ul>
-<h2>License</h2>
-<p>Apache 2.0 - See <a href="LICENSE">LICENSE</a></p>
-<h2>Inspiration</h2>
-<p>Inspired by <a href="https://github.com/simonw/tools">Simon Willison's tools collection</a>.</p>
+        {content}
 
     </div>
 </body>
 </html>
+"""
+
+
+def generate_index() -> None:
+    if not README_PATH.exists():
+        print(f"Error: {README_PATH} not found.")
+        return
+
+    content = README_PATH.read_text(encoding="utf-8")
+
+    # Remove the title
+    # We look for the first line being a level 1 header and remove it,
+    # and any following blank lines
+    content = re.sub(r"^# .+\s+", "", content)
+
+    # Convert to HTML
+    html_content = markdown.markdown(content, extensions=["fenced_code", "tables"])
+
+    # Inject into template
+    final_html = HTML_TEMPLATE.replace("{content}", html_content)
+
+    INDEX_PATH.write_text(final_html, encoding="utf-8")
+    print(f"Successfully generated {INDEX_PATH}")
+
+
+if __name__ == "__main__":
+    generate_index()
