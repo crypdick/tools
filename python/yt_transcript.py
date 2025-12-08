@@ -85,7 +85,11 @@ def get_transcript_text(
         languages = ["en", "en-US", "en-GB"]
 
     try:
-        segments = YouTubeTranscriptApi.get_transcript(video_id, languages=languages)
+        # Newer versions of the API use instance methods
+        api = YouTubeTranscriptApi()
+        fetched = api.fetch(video_id, languages=languages)
+        # FetchedTranscript object has 'snippets' list of FetchedTranscriptSnippet
+        segments = [{"text": s.text} for s in fetched.snippets]
     except (TranscriptsDisabled, NoTranscriptFound):
         return None
     except Exception as e:
