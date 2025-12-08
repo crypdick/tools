@@ -49,6 +49,21 @@ Options:
   --help                  Show this message and exit.
 ```
 
+### [strip_pdf_metadata.py](python/strip_pdf_metadata.py)
+
+Output of `uv run https://tools.ricardodecal.com/python/strip_pdf_metadata.py --help`:
+
+```text
+Usage: strip_pdf_metadata.py [OPTIONS] INPUT_FILE [OUTPUT_FILE]
+
+  Strip metadata from a PDF file.
+
+  If OUTPUT_FILE is not provided, writes to 'stripped_<INPUT_FILE>'.
+
+Options:
+  --help  Show this message and exit.
+```
+
 ### [yt_transcript.py](python/yt_transcript.py)
 
 Output of `uv run https://tools.ricardodecal.com/python/yt_transcript.py --help`:
