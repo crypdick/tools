@@ -49,6 +49,40 @@ Options:
   --help                  Show this message and exit.
 ```
 
+### [count_parquet_rows.py](python/count_parquet_rows.py)
+
+Output of `uv run https://tools.ricardodecal.com/python/count_parquet_rows.py --help`:
+
+```text
+Usage: count_parquet_rows.py [OPTIONS] DATASET_PATH
+
+  Count the number of rows in a parquet file/dataset without reading data into
+  memory.
+
+  Works by reading just the metadata headers. Supports: - Single parquet files
+  - Directories of parquet shards - Hive-style partitioned datasets - Local
+  paths and S3 URIs
+
+  Arguments:     DATASET_PATH: Local file path or S3 URI to the parquet
+  dataset.
+
+  Examples:
+
+      # Local file     uv run
+      https://tools.ricardodecal.com/python/count_parquet_rows.py
+      ./data.parquet
+
+      # Directory of shards     uv run
+      https://tools.ricardodecal.com/python/count_parquet_rows.py ./data_dir/
+
+      # S3 URI     uv run
+      https://tools.ricardodecal.com/python/count_parquet_rows.py s3://my-
+      bucket/data.parquet
+
+Options:
+  --help  Show this message and exit.
+```
+
 ### [strip_pdf_metadata.py](python/strip_pdf_metadata.py)
 
 Output of `uv run https://tools.ricardodecal.com/python/strip_pdf_metadata.py --help`:
