@@ -23,8 +23,9 @@ uv run python/foo.py [args]
 - **Main Docstring**: The docstring of your main command function (decorated with `@click.command`) provides the full help description.
 - Keep the first line of the main docstring as a clear, concise summary.
 - Manually document `@click.argument` arguments in an `Arguments:` section (Click does not auto-document them).
-- Include concrete `Examples:` section showing exactly how to run it.
-- Do not use generic `Usage:` placeholders.
+    - Include concrete `Examples:` section showing exactly how to run it.
+    - Separate multiple examples with blank lines to ensure correct formatting in the generated docs.
+    - Do not use generic `Usage:` placeholders.
 
 ```python
 #!/usr/bin/env python3

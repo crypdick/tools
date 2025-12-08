@@ -102,11 +102,15 @@ Usage: download_video.py [OPTIONS] URL
   Examples:
 
       uv run https://tools.ricardodecal.com/python/download_video.py
-      https://x.com/SemiAnalysis_/status/1990449859321888935     uv run
-      python/download_video.py https://www.youtube.com/watch?v=dQw4w9WgXcQ
+      https://x.com/SemiAnalysis_/status/1990449859321888935
+
+      uv run https://tools.ricardodecal.com/python/download_video.py
+      https://www.youtube.com/watch?v=dQw4w9WgXcQ
 
 Options:
-  -o, --output PATH  Output filename (optional). Defaults to 'Title [ID].mp4'
+  -o, --output PATH  Output filepath (optional). Can be a file path or a
+                     directory path. Defaults to 'Title [ID].mp4' in current
+                     directory.
   --help             Show this message and exit.
 ```
 

@@ -10,6 +10,9 @@
 Download videos from various platforms (Twitter/X, YouTube, etc.).
 """
 
+import os
+from pathlib import Path
+
 import click
 import yt_dlp
 
@@ -19,8 +22,8 @@ import yt_dlp
 @click.option(
     "--output",
     "-o",
-    type=click.Path(),
-    help="Output filename (optional). Defaults to 'Title [ID].mp4'",
+    type=click.Path(writable=True),
+    help="Output filepath (optional). Can be a file path or a directory path. Defaults to 'Title [ID].mp4' in current directory.",
 )
 def main(url: str, output: str | None) -> None:
     """
@@ -36,6 +39,7 @@ def main(url: str, output: str | None) -> None:
     Examples:
 
         uv run python/download_video.py https://x.com/SemiAnalysis_/status/1990449859321888935
+
         uv run python/download_video.py https://www.youtube.com/watch?v=dQw4w9WgXcQ
     """
     ydl_opts = {
@@ -47,7 +51,19 @@ def main(url: str, output: str | None) -> None:
     }
 
     if output:
-        ydl_opts["outtmpl"] = output
+        output_path = Path(output)
+        if output_path.is_dir() or output.endswith(os.sep):
+            # If it's a directory (existing or ends with slash), save there with default filename
+            # Create directory if it doesn't exist and ends with separator
+            if output.endswith(os.sep):
+                output_path.mkdir(parents=True, exist_ok=True)
+
+            ydl_opts["paths"] = {"home": str(output_path)}
+        else:
+            # It's a file path
+            # Ensure parent directory exists
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            ydl_opts["outtmpl"] = str(output_path)
 
     try:
         click.echo(f"Downloading from {url}...")
