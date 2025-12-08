@@ -103,11 +103,3 @@ repos:
         language: system
         files: ^ci/generate_index\.py$
         pass_filenames: false
-
-      # Tests last
-      - id: pytest
-        name: pytest
-        entry: bash -c 'uvx --with pytest pytest tests/ || true'
-        language: system
-        pass_filenames: false
-        always_run: true
