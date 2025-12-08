@@ -232,6 +232,29 @@ Options:
 Options:
   --help  Show this message and exit.
 </code></pre>
+<h3><a href="python/download_video.py">download_video.py</a></h3>
+<p>Output of <code>uv run https://tools.ricardodecal.com/python/download_video.py --help</code>:</p>
+<pre><code class="language-text">Usage: download_video.py [OPTIONS] URL
+
+  Download a video from a supported platform (Twitter/X, YouTube, etc.).
+
+  Uses yt-dlp to download videos from a wide variety of websites. Twitter
+  &quot;GIFs&quot; are actually MP4 videos, which this tool can also download.
+
+  Arguments:
+
+      URL: The URL of the video page (e.g., Twitter post, YouTube video).
+
+  Examples:
+
+      uv run https://tools.ricardodecal.com/python/download_video.py
+      https://x.com/SemiAnalysis_/status/1990449859321888935     uv run
+      python/download_video.py https://www.youtube.com/watch?v=dQw4w9WgXcQ
+
+Options:
+  -o, --output PATH  Output filename (optional). Defaults to 'Title [ID].mp4'
+  --help             Show this message and exit.
+</code></pre>
 <h3><a href="python/strip_pdf_metadata.py">strip_pdf_metadata.py</a></h3>
 <p>Output of <code>uv run https://tools.ricardodecal.com/python/strip_pdf_metadata.py --help</code>:</p>
 <pre><code class="language-text">Usage: strip_pdf_metadata.py [OPTIONS] INPUT_FILE [OUTPUT_FILE]

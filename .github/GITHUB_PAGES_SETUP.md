@@ -90,9 +90,8 @@ python3 -m http.server 8000
 
 Any push to the `main` branch automatically triggers:
 
-1. Lint checks (pre-commit)
-2. Tests (pytest)
-3. GitHub Pages deployment
+1. Lint checks (`uvx pre-commit run --all-files`)
+2. GitHub Pages deployment
 
 Monitor at: <https://github.com/crypdick/tools/actions>
 
@@ -127,24 +126,13 @@ All should show ✅ success!
 ### Workflow failures
 
 - Check workflow logs: `gh run view <run-id> --log-failed`
-- Ensure all pre-commit hooks pass locally: `pre-commit run --all-files`
-- Verify pytest can find tests: `uv run --with pytest pytest tests/ -v`
+- Ensure all pre-commit hooks pass locally: `uvx pre-commit run --all-files`
 
 ### Verify deployment
 
 - Check workflow completed: <https://github.com/crypdick/tools/actions>
 - Verify `index.html` is in repository root
 - Confirm GitHub Pages source is set to "GitHub Actions"
-
----
-
-## 📝 Updating the Site
-
-Any push to `main` automatically rebuilds and deploys. You can:
-
-1. Edit `index.html` to update the landing page
-2. Add more HTML pages (accessible at `tools.ricardodecal.com/filename.html`)
-3. Organize pages in subdirectories
 
 ---
 
