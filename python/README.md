@@ -14,7 +14,7 @@ uv run python/your-tool.py [args]
 
 ## Available Tools
 
-*No tools yet.*
+- `yt_transcript.py`: Fetch YouTube transcripts for a single video or a whole playlist into a single file.
 
 ---
 
@@ -64,7 +64,6 @@ uv add --script python/your-tool.py --python ">=3.13"
 ```
 
 This automatically updates the `# /// script` block.
-
 
 ---
 
