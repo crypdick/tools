@@ -160,9 +160,11 @@ from pathlib import Path
 @click.argument("directory", type=click.Path(exists=True))
 @click.option("--output-dir", type=click.Path(), default=".")
 def main(directory, output_dir):
-    path = Path(directory)
-    out = Path(output_dir)
-    out.mkdir(exist_ok=True)
+    # Always expand user paths (~) and resolve absolute paths
+    path = Path(directory).expanduser().resolve()
+    out = Path(output_dir).expanduser().resolve()
+
+    out.mkdir(parents=True, exist_ok=True)
 
     for file in path.glob("*.txt"):
         process(file, out)

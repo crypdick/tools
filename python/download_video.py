@@ -51,7 +51,9 @@ def main(url: str, output: str | None) -> None:
     }
 
     if output:
-        output_path = Path(output)
+        # Expand user path (~) and resolve absolute path
+        output_path = Path(output).expanduser().resolve()
+
         if output_path.is_dir() or output.endswith(os.sep):
             # If it's a directory (existing or ends with slash), save there with default filename
             # Create directory if it doesn't exist and ends with separator

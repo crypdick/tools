@@ -128,6 +128,9 @@ def main(url: str, output_file: Path | None, lang: list[str]) -> None:
     """
     if output_file is None:
         output_file = Path.cwd() / "transcript.txt"
+    else:
+        # Expand user path (~) if provided
+        output_file = output_file.expanduser().resolve()
 
     videos = get_video_list(url)
 

@@ -105,8 +105,8 @@ def main(
         uv run python/convert_arrow_to_parquet_streaming.py --source-dir ./arrow_data --output-dir ./parquet_data
         uv run python/convert_arrow_to_parquet_streaming.py --source-dir ./arrow_data --output-dir ./parquet_data --preserve-subdirs
     """
-    source_dir = os.path.abspath(source_dir)
-    output_dir = os.path.abspath(output_dir)
+    source_dir = os.path.abspath(os.path.expanduser(source_dir))
+    output_dir = os.path.abspath(os.path.expanduser(output_dir))
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
     arrow_files = find_arrow_files(source_dir)

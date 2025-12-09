@@ -10,6 +10,8 @@
 Count rows in a parquet dataset (local or S3) using metadata headers.
 """
 
+import os
+
 import click
 import pyarrow.dataset as ds
 
@@ -41,6 +43,10 @@ def main(dataset_path: str) -> None:
         uv run https://tools.ricardodecal.com/python/count_parquet_rows.py s3://my-bucket/data.parquet
     """
     try:
+        # Expand user path (~) if it's a local path
+        if not dataset_path.startswith("s3://"):
+            dataset_path = os.path.expanduser(dataset_path)
+
         dataset = ds.dataset(dataset_path, format="parquet")
         row_count = sum(
             row_group.num_rows
