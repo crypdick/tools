@@ -20,8 +20,15 @@ import pypandoc
 def convert_cell_to_rst(source: list[str]) -> str:
     """Convert markdown source lines to RST."""
     md_source = "".join(source)
-    # Handle potential Windows line endings issue mentioned in gist comments
-    return pypandoc.convert_text(md_source, "rst", format="md").replace("\r", "")
+    try:
+        # Handle potential Windows line endings issue mentioned in gist comments
+        return pypandoc.convert_text(md_source, "rst", format="md").replace("\r", "")
+    except OSError as e:
+        if "No pandoc was found" in str(e) or "pandoc: not found" in str(e):
+            raise click.ClickException(
+                "Pandoc not found. Please install pandoc (e.g. `brew install pandoc` or `sudo apt install pandoc`)."
+            ) from e
+        raise
 
 
 @click.command()
@@ -72,8 +79,16 @@ def main(notebook: Path, output: Path | None) -> None:
             rst_source = convert_cell_to_rst(source)
             python_content.append(f'"""\n{rst_source}\n"""')
         else:
-            if cell_type == "markdown":
-                rst_source = convert_cell_to_rst(source)
+            if cell_type == "markdown" or cell_type == "raw":
+                # Treat raw cells as potential reST or just comment them out
+                # If it's raw, we assume it might be reST suitable for the gallery
+                # but we'll comment it out to be safe and consistent with markdown behavior
+                if cell_type == "markdown":
+                    rst_source = convert_cell_to_rst(source)
+                else:
+                    # Raw cell: Just dump the content
+                    rst_source = "".join(source)
+
                 # Comment out RST lines
                 commented_source = "\n".join(
                     f"# {line}" if line.strip() else "#"
@@ -82,12 +97,18 @@ def main(notebook: Path, output: Path | None) -> None:
                 python_content.append(f"\n\n{'#' * 70}\n{commented_source}")
             elif cell_type == "code":
                 code_source = "".join(source)
-                # Handle magic commands and system commands
+                # Handle magic commands and system commands and help
                 lines = code_source.splitlines(keepends=True)
                 processed_lines = []
                 for line in lines:
                     stripped = line.lstrip()
-                    if stripped.startswith("%") or stripped.startswith("!"):
+                    # %magic, !system, ?help, help?
+                    if (
+                        stripped.startswith("%")
+                        or stripped.startswith("!")
+                        or stripped.startswith("?")
+                        or stripped.strip().endswith("?")
+                    ):
                         processed_lines.append(f"# {line}")
                     else:
                         processed_lines.append(line)
