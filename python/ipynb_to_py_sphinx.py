@@ -22,7 +22,9 @@ def convert_cell_to_rst(source: list[str]) -> str:
     md_source = "".join(source)
     try:
         # Handle potential Windows line endings issue mentioned in gist comments
-        return pypandoc.convert_text(md_source, "rst", format="md").replace("\r", "")
+        rst = pypandoc.convert_text(md_source, "rst", format="md").replace("\r", "")
+        # Use Sphinx-specific code-block directive instead of generic code directive
+        return rst.replace(".. code::", ".. code-block::")
     except OSError as e:
         if "No pandoc was found" in str(e) or "pandoc: not found" in str(e):
             raise click.ClickException(
