@@ -82,23 +82,19 @@ def main(notebook: Path, output: Path | None) -> None:
                 python_content.append(f"\n\n{'#' * 70}\n{commented_source}")
             elif cell_type == "code":
                 code_source = "".join(source)
-                python_content.append(f"\n\n{code_source}")
+                # Handle magic commands and system commands
+                lines = code_source.splitlines(keepends=True)
+                processed_lines = []
+                for line in lines:
+                    stripped = line.lstrip()
+                    if stripped.startswith("%") or stripped.startswith("!"):
+                        processed_lines.append(f"# {line}")
+                    else:
+                        processed_lines.append(line)
+                python_content.append(f"\n\n{''.join(processed_lines)}")
 
     # Join all parts
     final_content = "".join(python_content)
-
-    # Comment out magic commands (e.g., %matplotlib inline)
-    # The original gist replaces "\n%" with "\n# %"
-    # We should also handle if the file starts with %
-    lines = final_content.splitlines(keepends=True)
-    processed_lines = []
-    for line in lines:
-        if line.strip().startswith("%"):
-            processed_lines.append(f"# {line}")
-        else:
-            processed_lines.append(line)
-
-    final_content = "".join(processed_lines)
 
     # Ensure newline at end of file
     if not final_content.endswith("\n"):
