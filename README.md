@@ -114,6 +114,38 @@ Options:
   --help             Show this message and exit.
 ```
 
+### [ipynb_to_py_sphinx.py](python/ipynb_to_py_sphinx.py)
+
+Output of `uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py --help`:
+
+```text
+Usage: ipynb_to_py_sphinx.py [OPTIONS] NOTEBOOK
+
+  Convert a Jupyter notebook to a Sphinx Gallery Python script.
+
+  This tool converts a .ipynb file to a .py file formatted for Sphinx Gallery.
+  It converts Markdown cells to RST (using pypandoc) and comments them out,
+  while preserving code cells. It also handles magic commands by commenting
+  them out.
+
+  Based on: https://gist.github.com/chsasank/7218ca16f8d022e02a9c0deb94a310fe
+
+  Arguments:     NOTEBOOK: The path to the input Jupyter notebook (.ipynb).
+
+  Examples:
+
+      uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py
+      notebook.ipynb
+
+      uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py
+      notebook.ipynb --output my_gallery_script.py
+
+Options:
+  -o, --output PATH  Output Python file path. Defaults to notebook name with
+                     .py extension.
+  --help             Show this message and exit.
+```
+
 ### [strip_pdf_metadata.py](python/strip_pdf_metadata.py)
 
 Output of `uv run https://tools.ricardodecal.com/python/strip_pdf_metadata.py --help`:
