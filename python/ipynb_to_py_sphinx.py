@@ -74,7 +74,10 @@ def main(notebook: Path, output: Path | None) -> None:
         cell_type = cell.get("cell_type")
         source = cell.get("source", [])
 
-        if i == 0 and cell_type == "markdown":
+        if i == 0:
+            if cell_type != "markdown":
+                raise click.ClickException("First cell has to be markdown")
+
             # First cell is usually the title/description
             rst_source = convert_cell_to_rst(source)
             python_content.append(f'"""\n{rst_source}\n"""')
