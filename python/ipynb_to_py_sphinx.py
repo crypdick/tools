@@ -11,6 +11,7 @@ Convert a Jupyter notebook to a Sphinx Gallery Python script.
 """
 
 import json
+import re
 from pathlib import Path
 
 import click
@@ -108,12 +109,24 @@ def main(notebook: Path, output: Path | None) -> None:
                 for line in lines:
                     stripped = line.lstrip()
                     # %magic, !system, ?help, help?
-                    if (
-                        stripped.startswith("%")
-                        or stripped.startswith("!")
+                    is_magic = False
+                    # Only consider it magic if it looks like %magic or %%magic
+                    # i.e. followed by a letter or another %
+                    # This avoids matching "% (args)" which is Python modulo formatting
+                    if stripped.startswith("%") and re.match(
+                        r"^%?%[a-zA-Z]+", stripped
+                    ):
+                        is_magic = True
+
+                    # Check other magic/help patterns if not already identified
+                    if not is_magic and (
+                        stripped.startswith("!")
                         or stripped.startswith("?")
                         or stripped.strip().endswith("?")
                     ):
+                        is_magic = True
+
+                    if is_magic:
                         processed_lines.append(f"# {line}")
                     else:
                         processed_lines.append(line)
