@@ -103,8 +103,37 @@ def main(notebook: Path, output: Path | None) -> None:
                 python_content.append(f"\n\n{'#' * 70}\n{commented_source}")
             elif cell_type == "code":
                 code_source = "".join(source)
-                # Handle magic commands and system commands and help
                 lines = code_source.splitlines(keepends=True)
+
+                # Check for cell magics that should comment out the entire cell
+                # If a cell starts with %%magic, and it's not a python-wrapping magic,
+                # we assume the content is not valid Python (e.g. %%bash, %%html).
+                is_non_python_cell_magic = False
+                if lines:
+                    first_line = lines[0].lstrip()
+                    if first_line.startswith("%%"):
+                        parts = first_line[2:].split()
+                        if parts:
+                            magic_name = parts[0]
+                            # Whitelist of magics that wrap Python code or are valid in context
+                            # time/timeit: benchmark python code
+                            # capture: capture stdout/stderr of python code
+                            # prun: profile python code
+                            if magic_name not in {
+                                "time",
+                                "timeit",
+                                "capture",
+                                "prun",
+                                "python",
+                            }:
+                                is_non_python_cell_magic = True
+
+                if is_non_python_cell_magic:
+                    processed_lines = [f"# {line}" for line in lines]
+                    python_content.append(f"\n\n{''.join(processed_lines)}")
+                    continue
+
+                # Handle magic commands and system commands and help
                 processed_lines = []
                 for line in lines:
                     stripped = line.lstrip()
