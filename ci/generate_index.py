@@ -218,7 +218,22 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             padding-top: 2rem;
             border-top: 1px solid var(--border);
             text-align: center;
+            font-size: 0.9em;
+            color: var(--text);
             opacity: 0.7;
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+        }
+
+        footer a {
+            color: var(--link);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -236,8 +251,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         {content}
 
         <footer>
-            By Ricardo Decal. <a href="https://ricardodecal.com">ricardodecal.com</a><br>
-            Generated from <a href="https://github.com/crypdick/tools">crypdick/tools</a>
+            <p>Made by Ricardo Decal • Updated {date}</p>
+            <p>
+                <a href="https://ricardodecal.com">ricardodecal.com</a> | 
+                <a href="https://github.com/crypdick/tools">View on GitHub</a> | 
+                <a href="https://github.com/crypdick/tools/blob/main/index.html">View source</a>
+            </p>
         </footer>
     </div>
 </body>
@@ -287,8 +306,10 @@ def generate_index() -> None:
     # Wrap tool sections in collapsible details elements
     html_content = wrap_tools_in_details(html_content)
 
-    # Inject into template
-    final_html = HTML_TEMPLATE.replace("{content}", html_content)
+    # Inject into template with current date
+    from datetime import datetime
+    current_date = datetime.now().strftime("%B %d, %Y")
+    final_html = HTML_TEMPLATE.replace("{content}", html_content).replace("{date}", current_date)
 
     # Ensure single trailing newline and no trailing whitespace on lines
     lines = [line.rstrip() for line in final_html.splitlines()]
