@@ -99,6 +99,7 @@ Start with this template to ensure consistency and mobile compatibility:
             <a href="https://tools.ricardodecal.com">Home</a> | 
             <a href="https://github.com/ricardodecal/tools/blob/main/html/tool-name.html">View source</a>
         </p>
+        <p><a href="https://github.com/ricardodecal/tools/blob/main/LICENSE">Apache 2.0 License</a></p>
     </footer>
 
     <script type="module">
