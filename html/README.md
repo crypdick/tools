@@ -12,6 +12,12 @@ open html/tool-name.html
 open https://tools.ricardodecal.com/html/tool-name.html
 ```
 
+## Examples
+
+Browse the full collection at [tools.ricardodecal.com](https://tools.ricardodecal.com/html/).
+
+See also: [Simon Willison's tools collection](https://tools.simonwillison.net/) for inspiration and reference implementations.
+
 ## Creating Tools
 
 ### Core Principles
@@ -134,6 +140,11 @@ Prefer these proven, CDN-hosted libraries when vanilla JS isn't enough:
 - **Python**: `https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js`
 - **SQLite**: `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js`
 
+**Examples:**
+
+- [**ocr**](https://tools.simonwillison.net/ocr) - Loads PDF.js and Tesseract.js from CDN to run OCR entirely in-browser without server uploads.
+- [**pyodide-bar-chart**](https://tools.simonwillison.net/pyodide-bar-chart) - Loads Pyodide, Pandas, and matplotlib from CDN to render charts client-side.
+
 ---
 
 ## Common Patterns
@@ -153,6 +164,11 @@ async function copyToClipboard(text) {
 }
 ```
 
+**Examples:**
+
+- [**hacker-news-thread-export**](https://tools.simonwillison.net/hacker-news-thread-export) - Fetches HN thread via API and provides one-tap clipboard copy of condensed thread for pasting into LLMs.
+- [**paste-rich-text**](https://tools.simonwillison.net/paste-rich-text) - Extracts HTML from rich clipboard data on paste, particularly useful on mobile where inspecting HTML is difficult.
+
 ### Paste Processing
 
 Allow users to paste content directly into the page.
@@ -169,6 +185,11 @@ document.addEventListener('paste', async (e) => {
     // Process pasted data
 });
 ```
+
+**Examples:**
+
+- [**paste-rich-text**](https://tools.simonwillison.net/paste-rich-text) - Intercepts paste events to extract both plain text and HTML from clipboard data.
+- [**bluesky-thread**](https://tools.simonwillison.net/bluesky-thread) - Accepts pasted Bluesky URLs and fetches thread data via API for nested display.
 
 ### File I/O (Local)
 
@@ -190,6 +211,12 @@ input.onchange = (e) => {
 input.click();
 ```
 
+**Examples:**
+
+- [**ocr**](https://tools.simonwillison.net/ocr) - Opens PDFs locally using FileReader, converts pages to images, and runs Tesseract OCR client-side.
+- [**social-media-cropper**](https://tools.simonwillison.net/social-media-cropper) - Loads images via file input or paste, renders to canvas for interactive cropping to platform-specific dimensions.
+- [**ffmpeg-crop**](https://tools.simonwillison.net/ffmpeg-crop) - Previews local video files in browser, allows dragging crop box, then generates ffmpeg command without uploading.
+
 ### Download Generated File
 
 Save results back to the user's machine.
@@ -206,11 +233,18 @@ function downloadFile(content, filename, type = 'text/plain') {
 }
 ```
 
+**Examples:**
+
+- [**svg-render**](https://tools.simonwillison.net/svg-render) - Renders SVG to canvas, converts to blob, and triggers download as PNG/JPEG using createObjectURL.
+- [**open-sauce-2025**](https://tools.simonwillison.net/open-sauce-2025) - Generates ICS calendar file from scraped schedule data and offers download via blob URL.
+
 ### Secrets & State
 
 - **Secrets**: Store API keys in `localStorage` so they persist but stay on the client.
-- **State**: Store shareable state in URL hash or query parameters.
+- **URL State**: Store shareable state in URL hash or query parameters.
+- **Large State**: For state too large for the URL (e.g. document drafts), use `localStorage`.
 
+**Example: API Key Management**
 ```javascript
 // Get the API key from localStorage or prompt the user to enter it
 function getApiKey() {
@@ -229,6 +263,97 @@ if (!apiKey) {
   return;
 }
 ```
+
+**Example: Auto-saving Large Content**
+```javascript
+// Auto-save content to localStorage
+const STORAGE_KEY = 'my-tool-content';
+const textarea = document.getElementById('content');
+
+// Load saved content
+textarea.value = localStorage.getItem(STORAGE_KEY) || '';
+
+// Save on input with debounce
+textarea.addEventListener('input', () => {
+    localStorage.setItem(STORAGE_KEY, textarea.value);
+    document.getElementById('status').textContent = 'Saved locally';
+});
+```
+
+### CORS & APIs
+
+You can call any API that supports CORS (Cross-Origin Resource Sharing) directly from the browser.
+
+**CORS-Enabled APIs:**
+- **LLMs**: Anthropic, OpenAI, Gemini (often require keys, see "Secrets" above).
+- **GitHub API**: Fetch repos, issues, gists.
+- **PyPI**: Get package info.
+
+**Calling an LLM (Anthropic Example):**
+```javascript
+const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+        'x-api-key': apiKey, // From localStorage
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json',
+        'dangerously-allow-browser': 'true' // Required for client-side calls
+    },
+    body: JSON.stringify({
+        model: "claude-3-opus-20240229",
+        max_tokens: 1024,
+        messages: [{ role: "user", content: "Hello, world" }]
+    })
+});
+const data = await response.json();
+```
+
+**Examples:**
+
+- [**haiku**](https://tools.simonwillison.net/haiku) - Streams webcam screenshots to Claude API with vision capabilities, stores API key in localStorage.
+- [**openai-audio-output**](https://tools.simonwillison.net/openai-audio-output) - Calls OpenAI's GPT-4o audio API directly from browser to generate speech from text input.
+- [**gemini-bbox**](https://tools.simonwillison.net/gemini-bbox) - Uses Gemini 2.5 API to return complex shaped image masks for object detection in uploaded images.
+- [**pypi-changelog**](https://tools.simonwillison.net/pypi-changelog) - Fetches wheel URLs from PyPI API, downloads and diffs package versions entirely client-side.
+
+### Running Python in Browser (Pyodide)
+
+For tools that need Python libraries (Pandas, SQLite, etc.), use Pyodide to run Python entirely in the browser via WebAssembly.
+
+```javascript
+// 1. Add script: <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+// 2. Initialize and run
+async function runPython() {
+    const pyodide = await loadPyodide();
+    await pyodide.loadPackage("pandas");
+    
+    // Run Python code
+    const result = await pyodide.runPythonAsync(`
+        import pandas as pd
+        df = pd.DataFrame({"A": [1, 2, 3], "B": [4, 5, 6]})
+        df.to_html()
+    `);
+    document.getElementById('output').innerHTML = result;
+}
+```
+
+**Examples:**
+
+- [**pyodide-bar-chart**](https://tools.simonwillison.net/pyodide-bar-chart) - Loads Pyodide, then uses micropip to install Pandas and matplotlib for client-side data visualization.
+- [**numpy-pyodide-lab**](https://tools.simonwillison.net/numpy-pyodide-lab) - Interactive Numpy tutorial that runs Python code examples in-browser using Pyodide.
+- [**apsw-query**](https://tools.simonwillison.net/apsw-query) - Runs APSW SQLite library via Pyodide to show EXPLAIN QUERY plans without server.
+
+### WebAssembly
+
+Beyond Python, many other tools can run in-browser via WASM:
+- **FFmpeg**: Video/audio processing.
+- **Squoosh**: Image compression.
+- **DuckDB**: Analytical SQL queries.
+
+**Examples:**
+
+- [**ocr**](https://tools.simonwillison.net/ocr) - Uses Tesseract.js (WebAssembly port of Tesseract OCR engine) to recognize text in images client-side.
+- [**sloccount**](https://tools.simonwillison.net/sloccount) - Ports David Wheeler's SLOCCount (Perl/C) to browser using WebAssembly for code line counting.
+- [**micropython**](https://tools.simonwillison.net/micropython) - Runs MicroPython WebAssembly build for faster Python execution with smaller download than Pyodide.
 
 ---
 
