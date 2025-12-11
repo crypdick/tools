@@ -166,6 +166,53 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             margin-top: 3rem;
         }
 
+        details {
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            margin: 0.75rem 0;
+            background: var(--code-bg);
+        }
+
+        details[open] {
+            padding-bottom: 1rem;
+        }
+
+        summary {
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            user-select: none;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary::before {
+            content: '▶';
+            display: inline-block;
+            transition: transform 0.2s;
+            font-size: 0.8em;
+        }
+
+        details[open] summary::before {
+            transform: rotate(90deg);
+        }
+
+        summary:hover {
+            color: var(--link);
+        }
+
+        details .content {
+            margin-top: 1rem;
+            padding-left: 1.3rem;
+        }
+
         footer {
             margin-top: 3rem;
             padding-top: 2rem;
@@ -198,6 +245,25 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 """
 
 
+def wrap_tools_in_details(html: str) -> str:
+    """Wrap each H3 tool section in a collapsible details element."""
+    # Pattern to match H3 headings and their content until the next H3 or H2
+    pattern = r'(<h3>.*?</h3>)(.*?)(?=<h3>|<h2>|$)'
+    
+    def replace_tool(match):
+        h3_tag = match.group(1)
+        content = match.group(2)
+        
+        # Extract the tool name from the h3 tag
+        tool_name_match = re.search(r'<a[^>]*>([^<]+)</a>', h3_tag)
+        if tool_name_match:
+            tool_name = tool_name_match.group(1)
+            return f'<details>\n<summary>{tool_name}</summary>\n<div class="content">\n{content.strip()}\n</div>\n</details>\n'
+        return h3_tag + content
+    
+    return re.sub(pattern, replace_tool, html, flags=re.DOTALL)
+
+
 def generate_index() -> None:
     if not README_PATH.exists():
         print(f"Error: {README_PATH} not found.")
@@ -217,6 +283,9 @@ def generate_index() -> None:
 
     # Convert README to HTML
     html_content = markdown.markdown(content, extensions=["fenced_code", "tables"])
+
+    # Wrap tool sections in collapsible details elements
+    html_content = wrap_tools_in_details(html_content)
 
     # Inject into template
     final_html = HTML_TEMPLATE.replace("{content}", html_content)
