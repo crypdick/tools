@@ -257,6 +257,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 <a href="https://github.com/crypdick/tools">View on GitHub</a> | 
                 <a href="https://github.com/crypdick/tools/blob/main/index.html">View source</a>
             </p>
+            <p><a href="LICENSE">Apache 2.0 License</a></p>
         </footer>
     </div>
 </body>
@@ -299,6 +300,9 @@ def generate_index() -> None:
 
     # Remove the title (first line level 1 header)
     content = re.sub(r"^# .+\s+", "", content)
+
+    # Remove the License section (it will be in the footer)
+    content = re.sub(r"## License.*$", "", content, flags=re.DOTALL)
 
     # Convert README to HTML
     html_content = markdown.markdown(content, extensions=["fenced_code", "tables"])
