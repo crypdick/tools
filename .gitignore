@@ -55,3 +55,6 @@ htmlcov/
 
 # OS
 Thumbs.db
+.devtools/
+.cursor
+.claude
