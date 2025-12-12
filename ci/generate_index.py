@@ -253,8 +253,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         <footer>
             <p>Made by Ricardo Decal • Updated {date}</p>
             <p>
-                <a href="https://ricardodecal.com">ricardodecal.com</a> | 
-                <a href="https://github.com/crypdick/tools">View on GitHub</a> | 
+                <a href="https://ricardodecal.com">ricardodecal.com</a> |
+                <a href="https://github.com/crypdick/tools">View on GitHub</a> |
                 <a href="https://github.com/crypdick/tools/blob/main/index.html">View source</a>
             </p>
             <p><a href="LICENSE">Apache 2.0 License</a></p>
@@ -269,18 +269,18 @@ def wrap_tools_in_details(html: str) -> str:
     """Wrap each H3 tool section in a collapsible details element."""
     # Pattern to match H3 headings and their content until the next H3 or H2
     pattern = r'(<h3>.*?</h3>)(.*?)(?=<h3>|<h2>|$)'
-    
+
     def replace_tool(match):
         h3_tag = match.group(1)
         content = match.group(2)
-        
+
         # Extract the tool name from the h3 tag
         tool_name_match = re.search(r'<a[^>]*>([^<]+)</a>', h3_tag)
         if tool_name_match:
             tool_name = tool_name_match.group(1)
             return f'<details>\n<summary>{tool_name}</summary>\n<div class="content">\n{content.strip()}\n</div>\n</details>\n'
         return h3_tag + content
-    
+
     return re.sub(pattern, replace_tool, html, flags=re.DOTALL)
 
 

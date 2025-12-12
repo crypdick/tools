@@ -87,7 +87,7 @@ Start with this template to ensure consistency and mobile compatibility:
     <h1>Tool Name</h1>
 
     <div id="error" class="error"></div>
-    
+
     <!-- Tool UI -->
     <main>
         <!-- Content goes here -->
@@ -96,7 +96,7 @@ Start with this template to ensure consistency and mobile compatibility:
     <footer>
         <p>Made by Ricardo Decal. Updated YYYY-MM-DD</p>
         <p>
-            <a href="https://tools.ricardodecal.com">Home</a> | 
+            <a href="https://tools.ricardodecal.com">Home</a> |
             <a href="https://github.com/ricardodecal/tools/blob/main/html/tool-name.html">View source</a>
         </p>
         <p><a href="https://github.com/ricardodecal/tools/blob/main/LICENSE">Apache 2.0 License</a></p>
@@ -108,7 +108,7 @@ Start with this template to ensure consistency and mobile compatibility:
 
     document.addEventListener('DOMContentLoaded', () => {
         const errorDiv = document.getElementById('error');
-        
+
         function showError(msg) {
             errorDiv.textContent = msg;
             errorDiv.style.display = 'block';
@@ -178,11 +178,11 @@ Allow users to paste content directly into the page.
 document.addEventListener('paste', async (e) => {
     // Only handle if not pasting into an input
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-    
+
     e.preventDefault();
     const text = e.clipboardData.getData('text/plain');
     // const html = e.clipboardData.getData('text/html');
-    
+
     // Process pasted data
 });
 ```
@@ -326,7 +326,7 @@ For tools that need Python libraries (Pandas, SQLite, etc.), use Pyodide to run 
 async function runPython() {
     const pyodide = await loadPyodide();
     await pyodide.loadPackage("pandas");
-    
+
     // Run Python code
     const result = await pyodide.runPythonAsync(`
         import pandas as pd

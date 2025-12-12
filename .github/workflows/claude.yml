@@ -39,39 +39,38 @@ jobs:
           # This is an optional setting that allows Claude to read CI results on PRs
           additional_permissions: |
             actions: read
-          
+
           # Optional: Specify model (defaults to Claude Sonnet 4, uncomment for Claude Opus 4)
           # model: "claude-opus-4-20250514"
-          
+
           # Optional: Customize the trigger phrase (default: @claude)
           # trigger_phrase: "/claude"
-          
+
           # Optional: Trigger when specific user is assigned to an issue
           assignee_trigger: "claude-bot"
-          
+
           # Optional: Allow Claude to run specific commands
           allowed_tools: "Bash(uvx pre-commit run --all-files),Bash(python ci/check_*.py)"
-          
+
           # Optional: Add custom instructions for Claude to customize its behavior for your project
           custom_instructions: |
             This is a Python/Bash tools repository. When reviewing or writing code:
-            
+
             **Python Standards:**
             - All scripts must have proper main guards (if __name__ == "__main__")
             - Avoid 'Any' type hints
             - Follow PEP 8 and Python best practices
-            
+
             **Bash Standards:**
             - Ensure scripts are safe and portable
             - Use proper error handling
             - Include helpful comments
-            
+
             **General:**
             - Check the README.md files in each directory for specific guidelines
             - Run CI checks when appropriate to verify compliance
             - Focus on code quality, security, and maintainability
-          
+
           # Optional: Custom environment variables for Claude
           # claude_env: |
           #   NODE_ENV: test
-
