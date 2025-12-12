@@ -40,11 +40,36 @@ jobs:
           additional_permissions: |
             actions: read
 
-          # Optional: Give a custom prompt to Claude. If this is not specified, Claude will perform the instructions specified in the comment that tagged it.
-          # prompt: 'Update the pull request description to include a summary of changes.'
+          # Optional: Specify model (defaults to Claude Sonnet 4, uncomment for Claude Opus 4)
+          # model: "claude-opus-4-20250514"
 
-          # Optional: Add claude_args to customize behavior and configuration
-          # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
-          # or https://code.claude.com/docs/en/cli-reference for available options
-          # claude_args: '--allowed-tools Bash(gh pr:*)'
+          # Optional: Customize the trigger phrase (default: @claude)
+          # claude_args: '--trigger-phrase "/claude"'
+
+          # Optional: Trigger when specific user is assigned to an issue
+          # claude_args: '--assignee-trigger "claude-bot"'
+
+          # Optional: Allow Claude to run specific commands and add custom instructions
+          claude_args: >-
+            --allowed-tools "Bash(uvx pre-commit run --all-files),Bash(python ci/check_*.py),Bash(gh issue view:*),Bash(gh search:*),Bash(gh issue list:*),Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*)"
+            --custom-instructions "This is a Python/Bash tools repository. When reviewing or writing code:
+
+            **Python Standards:**
+            - All scripts must have proper main guards (if __name__ == \"__main__\")
+            - Avoid 'Any' type hints
+            - Follow PEP 8 and Python best practices
+
+            **Bash Standards:**
+            - Ensure scripts are safe and portable
+            - Use proper error handling
+            - Include helpful comments
+
+            **General:**
+            - Check the README.md files in each directory for specific guidelines
+            - Run CI checks when appropriate to verify compliance
+            - Focus on code quality, security, and maintainability"
+
+          # Optional: Custom environment variables for Claude
+          # claude_env: |
+          #   NODE_ENV: test
 
