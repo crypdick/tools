@@ -95,7 +95,7 @@ def extract_html_metadata(path: Path) -> tuple[str, str, str]:
         r'<p\s+class="subtitle">(.*?)</p>', content, re.IGNORECASE | re.DOTALL
     )
     if not subtitle_match or not subtitle_match.group(1).strip():
-        raise ValueError(f"{path.name}: Missing or empty <p class=\"subtitle\">")
+        raise ValueError(f'{path.name}: Missing or empty <p class="subtitle">')
 
     # Strip HTML tags and clean up
     desc_html = subtitle_match.group(1)
