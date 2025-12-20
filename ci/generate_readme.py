@@ -214,12 +214,14 @@ Output of <code>uv run https://{DOMAIN}/python/{info.filename} --help</code>:
 
 
 def format_html_tool_readme(info: ToolInfo) -> str:
-    """Format an HTML tool for the README (no collapse since descriptions are short)."""
-    return f"""<p>
-<a href="html/{info.filename}"><code>{info.filename}</code></a> <kbd>{TYPE_LABELS[info.tool_type]}</kbd><br>
+    """Format an HTML tool for the README (always open, no collapsing needed)."""
+    return f"""<details open>
+<summary><a href="html/{info.filename}"><code>{info.filename}</code></a> <kbd>{TYPE_LABELS[info.tool_type]}</kbd></summary>
+
 <a href="https://{DOMAIN}/html/{info.filename}">https://{DOMAIN}/html/{info.filename}</a><br>
 {info.description}
-</p>
+
+</details>
 """
 
 
@@ -247,10 +249,8 @@ def format_category_section(category: str, tools: list[ToolInfo]) -> str:
         counts.append(f"{len(pages)} page{'s' if len(pages) != 1 else ''}")
     count_str = ", ".join(counts)
 
-    # Sort tools: scripts first, then pages, alphabetically within each
-    sorted_tools = sorted(scripts, key=lambda t: t.name) + sorted(
-        pages, key=lambda t: t.name
-    )
+    # Sort all tools alphabetically by filename (interleaved)
+    sorted_tools = sorted(tools, key=lambda t: t.filename)
 
     tools_content = "\n".join(format_tool_readme(tool) for tool in sorted_tools)
 
