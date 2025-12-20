@@ -267,6 +267,21 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             font-size: 0.85em;
         }
 
+        kbd {
+            display: inline-block;
+            padding: 0.15rem 0.4rem;
+            font-size: 0.7em;
+            font-family: inherit;
+            font-weight: 500;
+            line-height: 1;
+            color: var(--text);
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            vertical-align: middle;
+            margin-left: 0.5rem;
+        }
+
         /* Fallback for any details without a class */
         details:not(.category):not(.tool) {
             border: 1px solid var(--border);

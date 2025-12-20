@@ -2,12 +2,16 @@
 
 ## Hooks
 
+### Python Tools
 - `check_executable.py` - Scripts must be executable
 - `check_no_argparse.py` - Use `click`, not `argparse`
 - `check_no_print.py` - Use `click.echo()`, not `print()`
 - `check_main_guard.py` - Require `if __name__ == "__main__":`
 - `check_no_any.py` - Ban `typing.Any`
 - `check_help.py` - Ensure scripts support `--help`
+
+### HTML Tools
+- `check_html_metadata.py` - Require frontmatter with category, `<title>`, and `<p class="subtitle">`
 
 ## Usage
 

@@ -1,0 +1,548 @@
+<!--
+category: data
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strip PDF Metadata</title>
+    <style>
+    :root {
+        --primary: #c2410c;
+        --primary-hover: #9a3412;
+        --bg: #1c1917;
+        --surface: #292524;
+        --surface-hover: #3c3836;
+        --text: #fafaf9;
+        --text-muted: #a8a29e;
+        --border: #44403c;
+        --accent: #78350f;
+        --success: #16a34a;
+        --success-bg: rgba(22, 163, 74, 0.15);
+        --error: #dc2626;
+        --error-bg: rgba(220, 38, 38, 0.15);
+    }
+    * { box-sizing: border-box; }
+    body {
+        font-family: "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 32px 24px;
+        line-height: 1.6;
+        color: var(--text);
+        background: var(--bg);
+        min-height: 100vh;
+    }
+    h1 {
+        font-weight: 700;
+        font-size: 2rem;
+        margin-bottom: 0.25rem;
+        letter-spacing: -0.03em;
+        background: linear-gradient(135deg, #fb923c, #ea580c);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .subtitle {
+        color: var(--text-muted);
+        margin-bottom: 2.5rem;
+        font-size: 1.05rem;
+    }
+    .drop-zone {
+        border: 2px dashed var(--border);
+        border-radius: 12px;
+        padding: 48px 24px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: var(--surface);
+        margin-bottom: 1.5rem;
+    }
+    .drop-zone:hover,
+    .drop-zone.dragover {
+        border-color: var(--primary);
+        background: rgba(194, 65, 12, 0.08);
+    }
+    .drop-zone-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.8;
+    }
+    .drop-zone-text {
+        font-size: 1.1rem;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+    }
+    .drop-zone-hint {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+    }
+    input[type="file"] {
+        display: none;
+    }
+    .file-info {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        display: none;
+    }
+    .file-info.visible {
+        display: block;
+    }
+    .file-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+    .file-icon {
+        font-size: 1.5rem;
+    }
+    .file-name {
+        font-weight: 600;
+        font-size: 1rem;
+        word-break: break-all;
+    }
+    .file-size {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+    .metadata-section {
+        margin-top: 1rem;
+    }
+    .metadata-title {
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.75rem;
+    }
+    .metadata-grid {
+        display: grid;
+        gap: 0.5rem;
+    }
+    .metadata-row {
+        display: flex;
+        gap: 0.75rem;
+        font-size: 0.9rem;
+        padding: 0.5rem 0.75rem;
+        background: rgba(255,255,255,0.03);
+        border-radius: 6px;
+    }
+    .metadata-key {
+        color: var(--text-muted);
+        min-width: 100px;
+        flex-shrink: 0;
+    }
+    .metadata-value {
+        color: var(--text);
+        word-break: break-all;
+    }
+    .metadata-empty {
+        color: var(--text-muted);
+        font-style: italic;
+        font-size: 0.9rem;
+    }
+    .actions {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+    button {
+        font-size: 16px;
+        font-family: inherit;
+        font-weight: 600;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background: var(--primary);
+        color: white;
+        transition: all 0.15s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    button:hover:not(:disabled) {
+        background: var(--primary-hover);
+        transform: translateY(-1px);
+    }
+    button:active:not(:disabled) {
+        transform: translateY(0);
+    }
+    button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    button.secondary {
+        background: var(--surface);
+        color: var(--text);
+        border: 1px solid var(--border);
+    }
+    button.secondary:hover:not(:disabled) {
+        background: var(--surface-hover);
+    }
+    .message {
+        padding: 14px 16px;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        display: none;
+        font-size: 0.95rem;
+    }
+    .message.error {
+        color: #fca5a5;
+        background: var(--error-bg);
+        border: 1px solid rgba(220, 38, 38, 0.3);
+        display: block;
+    }
+    .message.success {
+        color: #86efac;
+        background: var(--success-bg);
+        border: 1px solid rgba(22, 163, 74, 0.3);
+        display: block;
+    }
+    .message:not(.error):not(.success) {
+        display: none;
+    }
+    .spinner {
+        width: 18px;
+        height: 18px;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    .loading-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.6);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+    }
+    .loading-overlay.visible {
+        display: flex;
+    }
+    .loading-box {
+        background: var(--surface);
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+    .loading-box .spinner {
+        width: 40px;
+        height: 40px;
+        border-width: 3px;
+        margin: 0 auto 1rem;
+    }
+    footer {
+        margin-top: 64px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        font-size: 0.875rem;
+        color: var(--text-muted);
+        text-align: center;
+    }
+    footer a {
+        color: var(--primary);
+        text-decoration: none;
+    }
+    footer a:hover {
+        text-decoration: underline;
+    }
+    footer p {
+        margin: 0.5rem 0;
+    }
+
+    @media (max-width: 600px) {
+        body { padding: 20px 16px; }
+        h1 { font-size: 1.6rem; }
+        .drop-zone { padding: 32px 16px; }
+        .actions { flex-direction: column; }
+        button { width: 100%; justify-content: center; }
+        .metadata-row { flex-direction: column; gap: 0.25rem; }
+        .metadata-key { min-width: auto; }
+    }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1>Strip PDF Metadata</h1>
+    <p class="subtitle">Remove author, title, timestamps, and other metadata from PDF files. Runs entirely in your browser — files never leave your device.</p>
+
+    <div id="message" class="message"></div>
+
+    <div class="drop-zone" id="drop-zone">
+        <div class="drop-zone-icon">📄</div>
+        <div class="drop-zone-text">Drop a PDF file here</div>
+        <div class="drop-zone-hint">or click to browse</div>
+        <input type="file" id="file-input" accept=".pdf,application/pdf">
+    </div>
+
+    <div class="file-info" id="file-info">
+        <div class="file-header">
+            <span class="file-icon">📄</span>
+            <div>
+                <div class="file-name" id="file-name">document.pdf</div>
+                <div class="file-size" id="file-size">1.2 MB</div>
+            </div>
+        </div>
+
+        <div class="metadata-section">
+            <div class="metadata-title">Current Metadata</div>
+            <div class="metadata-grid" id="metadata-grid">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+    </div>
+
+    <div class="actions">
+        <button id="btn-strip" disabled>
+            <span id="btn-strip-text">Strip Metadata & Download</span>
+        </button>
+        <button id="btn-clear" class="secondary" disabled>Clear</button>
+    </div>
+
+    <div class="loading-overlay" id="loading">
+        <div class="loading-box">
+            <div class="spinner"></div>
+            <div>Processing PDF...</div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Made by Ricardo Decal. Updated 2025-12-20</p>
+        <p>
+            <a href="https://tools.ricardodecal.com">Home</a> |
+            <a href="https://github.com/ricardodecal/tools/blob/main/html/strip_pdf_metadata.html">View source</a>
+        </p>
+        <p><a href="https://github.com/ricardodecal/tools/blob/main/LICENSE">Apache 2.0 License</a></p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script type="module">
+const { PDFDocument } = PDFLib;
+
+document.addEventListener('DOMContentLoaded', () => {
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const fileInfo = document.getElementById('file-info');
+    const fileName = document.getElementById('file-name');
+    const fileSize = document.getElementById('file-size');
+    const metadataGrid = document.getElementById('metadata-grid');
+    const messageDiv = document.getElementById('message');
+    const loadingOverlay = document.getElementById('loading');
+
+    const btnStrip = document.getElementById('btn-strip');
+    const btnClear = document.getElementById('btn-clear');
+
+    let currentFile = null;
+    let currentPdfDoc = null;
+
+    function showMessage(msg, type) {
+        messageDiv.textContent = msg;
+        messageDiv.className = 'message ' + type;
+    }
+
+    function clearMessage() {
+        messageDiv.className = 'message';
+    }
+
+    function formatBytes(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    function formatDate(date) {
+        if (!date) return null;
+        try {
+            if (date instanceof Date) {
+                return date.toLocaleString();
+            }
+            return String(date);
+        } catch {
+            return String(date);
+        }
+    }
+
+    function displayMetadata(pdfDoc) {
+        const metadataFields = [
+            { key: 'Title', value: pdfDoc.getTitle() },
+            { key: 'Author', value: pdfDoc.getAuthor() },
+            { key: 'Subject', value: pdfDoc.getSubject() },
+            { key: 'Creator', value: pdfDoc.getCreator() },
+            { key: 'Producer', value: pdfDoc.getProducer() },
+            { key: 'Keywords', value: pdfDoc.getKeywords() },
+            { key: 'Created', value: formatDate(pdfDoc.getCreationDate()) },
+            { key: 'Modified', value: formatDate(pdfDoc.getModificationDate()) },
+        ];
+
+        const hasMetadata = metadataFields.some(f => f.value);
+
+        if (!hasMetadata) {
+            metadataGrid.innerHTML = '<div class="metadata-empty">No metadata found in this PDF.</div>';
+            return;
+        }
+
+        metadataGrid.innerHTML = metadataFields
+            .filter(f => f.value)
+            .map(f => `
+                <div class="metadata-row">
+                    <span class="metadata-key">${f.key}</span>
+                    <span class="metadata-value">${escapeHtml(String(f.value))}</span>
+                </div>
+            `).join('');
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    async function loadPdf(file) {
+        clearMessage();
+
+        if (!file.type.includes('pdf') && !file.name.toLowerCase().endsWith('.pdf')) {
+            showMessage('Please select a PDF file.', 'error');
+            return;
+        }
+
+        try {
+            loadingOverlay.classList.add('visible');
+
+            const arrayBuffer = await file.arrayBuffer();
+            const pdfDoc = await PDFDocument.load(arrayBuffer, {
+                updateMetadata: false
+            });
+
+            currentFile = file;
+            currentPdfDoc = pdfDoc;
+
+            fileName.textContent = file.name;
+            fileSize.textContent = formatBytes(file.size);
+
+            displayMetadata(pdfDoc);
+
+            fileInfo.classList.add('visible');
+            btnStrip.disabled = false;
+            btnClear.disabled = false;
+
+        } catch (err) {
+            console.error(err);
+            showMessage(`Failed to load PDF: ${err.message}`, 'error');
+        } finally {
+            loadingOverlay.classList.remove('visible');
+        }
+    }
+
+    async function stripAndDownload() {
+        if (!currentPdfDoc || !currentFile) return;
+
+        clearMessage();
+
+        try {
+            loadingOverlay.classList.add('visible');
+
+            // Create a new PDF to strip all metadata
+            const strippedPdf = await PDFDocument.create();
+
+            // Copy all pages
+            const pages = await strippedPdf.copyPages(currentPdfDoc, currentPdfDoc.getPageIndices());
+            pages.forEach(page => strippedPdf.addPage(page));
+
+            // The new PDF has no metadata by default
+            // Explicitly set empty values to ensure nothing carries over
+            strippedPdf.setTitle('');
+            strippedPdf.setAuthor('');
+            strippedPdf.setSubject('');
+            strippedPdf.setCreator('');
+            strippedPdf.setProducer('');
+            strippedPdf.setKeywords([]);
+
+            const pdfBytes = await strippedPdf.save();
+
+            // Generate filename
+            const originalName = currentFile.name;
+            const baseName = originalName.replace(/\.pdf$/i, '');
+            const newName = `${baseName}_stripped.pdf`;
+
+            // Download
+            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = newName;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            showMessage(`Successfully stripped metadata! Downloaded as "${newName}"`, 'success');
+
+        } catch (err) {
+            console.error(err);
+            showMessage(`Failed to process PDF: ${err.message}`, 'error');
+        } finally {
+            loadingOverlay.classList.remove('visible');
+        }
+    }
+
+    function clearFile() {
+        currentFile = null;
+        currentPdfDoc = null;
+        fileInput.value = '';
+        fileInfo.classList.remove('visible');
+        metadataGrid.innerHTML = '';
+        btnStrip.disabled = true;
+        btnClear.disabled = true;
+        clearMessage();
+    }
+
+    // Event listeners
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            loadPdf(files[0]);
+        }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            loadPdf(e.target.files[0]);
+        }
+    });
+
+    btnStrip.addEventListener('click', stripAndDownload);
+    btnClear.addEventListener('click', clearFile);
+});
+    </script>
+</body>
+</html>
+

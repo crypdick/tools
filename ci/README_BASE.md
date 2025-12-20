@@ -5,7 +5,10 @@ Edit ci/README_BASE.md or the tool docstrings instead.
 -->
 # Ricardo Decal's Tools
 
-A collection of command-line utilities and scripts, written to be immediately runnable using `uv run https://tools.ricardodecal.com/python/foo.py`, which spawns a self-contained and ephemeral [`uv`](https://github.com/astral-sh/uv) Python environment.
+A collection of simple, self-contained tools in two flavors:
+
+- **Scripts** — Python CLI tools runnable with `uv run https://tools.ricardodecal.com/python/foo.py`, which spawns a self-contained and ephemeral [`uv`](https://github.com/astral-sh/uv) environment.
+- **Pages** — Single-file HTML tools that run entirely in your browser at `https://tools.ricardodecal.com/html/foo.html`.
 
 This is an experiment in low-stakes vibe coding. The code lives in [`crypdick/tools`](https://github.com/crypdick/tools).
 

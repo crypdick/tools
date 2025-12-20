@@ -5,7 +5,10 @@ Edit ci/README_BASE.md or the tool docstrings instead.
 -->
 # Ricardo Decal's Tools
 
-A collection of command-line utilities and scripts, written to be immediately runnable using `uv run https://tools.ricardodecal.com/python/foo.py`, which spawns a self-contained and ephemeral [`uv`](https://github.com/astral-sh/uv) Python environment.
+A collection of simple, self-contained tools in two flavors:
+
+- **Scripts** — Python CLI tools runnable with `uv run https://tools.ricardodecal.com/python/foo.py`, which spawns a self-contained and ephemeral [`uv`](https://github.com/astral-sh/uv) environment.
+- **Pages** — Single-file HTML tools that run entirely in your browser at `https://tools.ricardodecal.com/html/foo.html`.
 
 This is an experiment in low-stakes vibe coding. The code lives in [`crypdick/tools`](https://github.com/crypdick/tools).
 
@@ -16,10 +19,10 @@ Inspired by [Simon Willison's tools collection](https://github.com/simonw/tools)
 <!-- TOOLS_START -->
 
 <details>
-<summary><strong>📊 Data Processing</strong> (7 tools)</summary>
+<summary><strong>📊 Data Processing</strong> (7 scripts, 2 pages)</summary>
 
 <details>
-<summary><a href="python/convert_arrow_to_parquet_streaming.py"><code>convert_arrow_to_parquet_streaming.py</code></a></summary>
+<summary><a href="python/convert_arrow_to_parquet_streaming.py"><code>convert_arrow_to_parquet_streaming.py</code></a> <kbd>script</kbd></summary>
 
 Output of <code>uv run https://tools.ricardodecal.com/python/convert_arrow_to_parquet_streaming.py --help</code>:
 
@@ -57,7 +60,7 @@ Options:
 </details>
 
 <details>
-<summary><a href="python/count_parquet_rows.py"><code>count_parquet_rows.py</code></a></summary>
+<summary><a href="python/count_parquet_rows.py"><code>count_parquet_rows.py</code></a> <kbd>script</kbd></summary>
 
 Output of <code>uv run https://tools.ricardodecal.com/python/count_parquet_rows.py --help</code>:
 
@@ -93,7 +96,7 @@ Options:
 </details>
 
 <details>
-<summary><a href="python/dedup_dirs.py"><code>dedup_dirs.py</code></a></summary>
+<summary><a href="python/dedup_dirs.py"><code>dedup_dirs.py</code></a> <kbd>script</kbd></summary>
 
 Output of <code>uv run https://tools.ricardodecal.com/python/dedup_dirs.py --help</code>:
 
@@ -102,7 +105,7 @@ Output of <code>uv run https://tools.ricardodecal.com/python/dedup_dirs.py --hel
   Find duplicate files between OLD_DIR and NEW_DIR, optionally deleting from
   OLD_DIR.
 
-  Compares files by path and content. For large files (>10MB), uses sampling
+  Compares files by path and content. For large files (&gt;10MB), uses sampling
   for speed. For smaller files, compares MD5 hashes. Runs in parallel for
   performance on large directory trees.
 
@@ -136,7 +139,7 @@ Options:
 </details>
 
 <details>
-<summary><a href="python/download_video.py"><code>download_video.py</code></a></summary>
+<summary><a href="python/download_video.py"><code>download_video.py</code></a> <kbd>script</kbd></summary>
 
 Output of <code>uv run https://tools.ricardodecal.com/python/download_video.py --help</code>:
 
@@ -145,7 +148,7 @@ Output of <code>uv run https://tools.ricardodecal.com/python/download_video.py -
   Download a video from a supported platform (Twitter/X, YouTube, etc.).
 
   Uses yt-dlp to download videos from a wide variety of websites. Twitter
-  "GIFs" are actually MP4 videos, which this tool can also download.
+  &quot;GIFs&quot; are actually MP4 videos, which this tool can also download.
 
   Arguments:
 
@@ -161,7 +164,7 @@ Output of <code>uv run https://tools.ricardodecal.com/python/download_video.py -
 
 Options:
   -o, --output PATH  Output filepath (optional). Can be a file path or a
-                     directory path. Defaults to 'Title [ID].mp4' in current
+                     directory path. Defaults to &#x27;Title [ID].mp4&#x27; in current
                      directory.
   --help             Show this message and exit.
 </code></pre>
@@ -169,7 +172,7 @@ Options:
 </details>
 
 <details>
-<summary><a href="python/html_to_text.py"><code>html_to_text.py</code></a></summary>
+<summary><a href="python/html_to_text.py"><code>html_to_text.py</code></a> <kbd>script</kbd></summary>
 
 Output of <code>uv run https://tools.ricardodecal.com/python/html_to_text.py --help</code>:
 
@@ -205,7 +208,7 @@ Options:
 </details>
 
 <details>
-<summary><a href="python/strip_pdf_metadata.py"><code>strip_pdf_metadata.py</code></a></summary>
+<summary><a href="python/strip_pdf_metadata.py"><code>strip_pdf_metadata.py</code></a> <kbd>script</kbd></summary>
 
 Output of <code>uv run https://tools.ricardodecal.com/python/strip_pdf_metadata.py --help</code>:
 
@@ -213,7 +216,7 @@ Output of <code>uv run https://tools.ricardodecal.com/python/strip_pdf_metadata.
 
   Strip metadata from a PDF file.
 
-  If OUTPUT_FILE is not provided, writes to 'stripped_<INPUT_FILE>'.
+  If OUTPUT_FILE is not provided, writes to &#x27;stripped_&lt;INPUT_FILE&gt;&#x27;.
 
 Options:
   --help  Show this message and exit.
@@ -222,7 +225,7 @@ Options:
 </details>
 
 <details>
-<summary><a href="python/yt_transcript.py"><code>yt_transcript.py</code></a></summary>
+<summary><a href="python/yt_transcript.py"><code>yt_transcript.py</code></a> <kbd>script</kbd></summary>
 
 Output of <code>uv run https://tools.ricardodecal.com/python/yt_transcript.py --help</code>:
 
@@ -237,8 +240,8 @@ Output of <code>uv run https://tools.ricardodecal.com/python/yt_transcript.py --
 
   Examples:
 
-      uv run https://tools.ricardodecal.com/python/yt_transcript.py "https://youtu.be/..."
-      uv run https://tools.ricardodecal.com/python/yt_transcript.py "https://youtube.com/playlist?list=..." out.txt
+      uv run https://tools.ricardodecal.com/python/yt_transcript.py &quot;https://youtu.be/...&quot;
+      uv run https://tools.ricardodecal.com/python/yt_transcript.py &quot;https://youtube.com/playlist?list=...&quot; out.txt
 
 Options:
   -l, --lang TEXT  Language codes to prefer (e.g. -l en -l fr)
@@ -247,13 +250,31 @@ Options:
 
 </details>
 
+<details>
+<summary><a href="html/html_to_text.html"><code>html_to_text.html</code></a> <kbd>page</kbd></summary>
+
+Open in browser: <a href="https://tools.ricardodecal.com/html/html_to_text.html">https://tools.ricardodecal.com/html/html_to_text.html</a>
+
+Paste HTML and extract readable plain text. Runs entirely in your browser.
+
 </details>
 
 <details>
-<summary><strong>🛠️ Development</strong> (2 tools)</summary>
+<summary><a href="html/strip_pdf_metadata.html"><code>strip_pdf_metadata.html</code></a> <kbd>page</kbd></summary>
+
+Open in browser: <a href="https://tools.ricardodecal.com/html/strip_pdf_metadata.html">https://tools.ricardodecal.com/html/strip_pdf_metadata.html</a>
+
+Remove author, title, timestamps, and other metadata from PDF files. Runs entirely in your browser — files never leave your device.
+
+</details>
+
+</details>
 
 <details>
-<summary><a href="python/burn_iso.py"><code>burn_iso.py</code></a></summary>
+<summary><strong>🛠️ Development</strong> (2 scripts)</summary>
+
+<details>
+<summary><a href="python/burn_iso.py"><code>burn_iso.py</code></a> <kbd>script</kbd></summary>
 
 Output of <code>uv run https://tools.ricardodecal.com/python/burn_iso.py --help</code>:
 
@@ -292,7 +313,7 @@ Options:
 </details>
 
 <details>
-<summary><a href="python/ipynb_to_py_sphinx.py"><code>ipynb_to_py_sphinx.py</code></a></summary>
+<summary><a href="python/ipynb_to_py_sphinx.py"><code>ipynb_to_py_sphinx.py</code></a> <kbd>script</kbd></summary>
 
 Output of <code>uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py --help</code>:
 
