@@ -3,7 +3,8 @@
 # requires-python = ">=3.12"
 # category = "dev"
 # dependencies = [
-#     "click>=8.1.0",
+#     "typer>=0.15.0",
+#     "rich>=13.0.0",
 # ]
 # ///
 """
@@ -14,8 +15,11 @@ import json
 import os
 import subprocess
 from pathlib import Path
+from typing import Annotated
 
-import click
+import typer
+from rich import print
+from rich.table import Table
 
 
 def get_block_devices() -> dict:
@@ -29,17 +33,20 @@ def get_block_devices() -> dict:
         )
         return json.loads(result.stdout)
     except subprocess.CalledProcessError as e:
-        raise click.ClickException(f"Error getting block devices: {e}") from e
+        print(f"[bold red]Error:[/bold red] getting block devices: {e}")
+        raise typer.Exit(code=1)
 
 
 def show_available_devices() -> None:
     """Display available block devices."""
     devices = get_block_devices()
 
-    click.echo("\nAvailable Block Devices:")
-    click.echo("-" * 70)
-    click.echo(f"{'Device':<12} {'Size':<10} {'Type':<8} {'Mount Point':<20} {'Model'}")
-    click.echo("-" * 70)
+    table = Table(title="Available Block Devices")
+    table.add_column("Device", style="cyan")
+    table.add_column("Size", style="green")
+    table.add_column("Type")
+    table.add_column("Mount Point", style="yellow")
+    table.add_column("Model", style="dim")
 
     for device in devices.get("blockdevices", []):
         name = device.get("name", "")
@@ -49,37 +56,42 @@ def show_available_devices() -> None:
         model = device.get("model", "") or ""
 
         if device_type == "disk":
-            click.echo(
-                f"/dev/{name:<8} {size:<10} {device_type:<8} {mountpoint:<20} {model}"
-            )
+            table.add_row(f"/dev/{name}", size, device_type, mountpoint, model)
 
-    click.echo("-" * 70)
+    print(table)
 
 
 def verify_iso_file(iso_path: Path) -> None:
     """Verify the ISO file exists and is readable."""
     if not iso_path.exists():
-        raise click.ClickException(f"ISO file not found: {iso_path}")
+        print(f"[bold red]Error:[/bold red] ISO file not found: {iso_path}")
+        raise typer.Exit(code=1)
 
     if not iso_path.is_file():
-        raise click.ClickException(f"Path is not a file: {iso_path}")
+        print(f"[bold red]Error:[/bold red] Path is not a file: {iso_path}")
+        raise typer.Exit(code=1)
 
     try:
         with open(iso_path, "rb") as f:
             f.read(1024)
-    except PermissionError as e:
-        raise click.ClickException(f"No permission to read ISO file: {iso_path}") from e
+    except PermissionError:
+        print(
+            f"[bold red]Error:[/bold red] No permission to read ISO file: {iso_path}"
+        )
+        raise typer.Exit(code=1)
     except Exception as e:
-        raise click.ClickException(f"Error reading ISO file: {e}") from e
+        print(f"[bold red]Error:[/bold red] reading ISO file: {e}")
+        raise typer.Exit(code=1)
 
     file_size_gb = iso_path.stat().st_size / (1024**3)
-    click.secho(f"✓ ISO file verified: {iso_path} ({file_size_gb:.2f} GB)", fg="green")
+    print(f"[green]✓[/green] ISO file verified: {iso_path} ({file_size_gb:.2f} GB)")
 
 
 def verify_usb_device(device_path: str) -> None:
     """Verify the USB device exists and is writable."""
     if not os.path.exists(device_path):
-        raise click.ClickException(f"Device not found: {device_path}")
+        print(f"[bold red]Error:[/bold red] Device not found: {device_path}")
+        raise typer.Exit(code=1)
 
     try:
         result = subprocess.run(
@@ -88,19 +100,21 @@ def verify_usb_device(device_path: str) -> None:
             check=False,
         )
         if result.returncode != 0:
-            raise click.ClickException(
-                f"No write permission to device: {device_path}\n"
+            print(
+                f"[bold red]Error:[/bold red] No write permission to device: {device_path}\n"
                 "Make sure you're running with sudo privileges."
             )
+            raise typer.Exit(code=1)
     except Exception as e:
-        raise click.ClickException(f"Error checking device permissions: {e}") from e
+        print(f"[bold red]Error:[/bold red] checking device permissions: {e}")
+        raise typer.Exit(code=1)
 
-    click.secho(f"✓ USB device verified: {device_path}", fg="green")
+    print(f"[green]✓[/green] USB device verified: {device_path}")
 
 
 def unmount_device_partitions(device_path: str) -> None:
     """Unmount all partitions on the device."""
-    click.echo(f"Checking for mounted partitions on {device_path}...")
+    print(f"Checking for mounted partitions on {device_path}...")
 
     try:
         result = subprocess.run(
@@ -120,27 +134,27 @@ def unmount_device_partitions(device_path: str) -> None:
                     mounted_partitions.append((f"/dev/{partition_name}", mountpoint))
 
         if mounted_partitions:
-            click.echo(f"Found {len(mounted_partitions)} mounted partition(s)")
+            print(f"Found {len(mounted_partitions)} mounted partition(s)")
             for partition, mountpoint in mounted_partitions:
-                click.echo(f"Unmounting {partition} from {mountpoint}...")
+                print(f"Unmounting {partition} from {mountpoint}...")
                 try:
                     subprocess.run(["sudo", "umount", partition], check=True)
-                    click.secho(f"✓ Unmounted {partition}", fg="green")
+                    print(f"[green]✓[/green] Unmounted {partition}")
                 except subprocess.CalledProcessError as e:
-                    raise click.ClickException(
-                        f"Failed to unmount {partition}: {e}"
-                    ) from e
+                    print(f"[bold red]Error:[/bold red] Failed to unmount {partition}: {e}")
+                    raise typer.Exit(code=1)
         else:
-            click.echo("No mounted partitions found")
+            print("No mounted partitions found")
 
     except subprocess.CalledProcessError as e:
-        raise click.ClickException(f"Error checking mounted partitions: {e}") from e
+        print(f"[bold red]Error:[/bold red] checking mounted partitions: {e}")
+        raise typer.Exit(code=1)
 
 
 def burn_iso_to_usb(iso_path: Path, device_path: str) -> None:
     """Burn the ISO to the USB device using dd with progress monitoring."""
-    click.secho(f"Starting to burn {iso_path.name} to {device_path}...", fg="yellow")
-    click.echo("This will take several minutes depending on USB speed.")
+    print(f"[yellow]Starting to burn {iso_path.name} to {device_path}...[/yellow]")
+    print("This will take several minutes depending on USB speed.")
 
     cmd = [
         "sudo",
@@ -152,7 +166,7 @@ def burn_iso_to_usb(iso_path: Path, device_path: str) -> None:
         "conv=fdatasync",
     ]
 
-    click.echo(f"Executing: {' '.join(cmd)}")
+    print(f"Executing: {' '.join(cmd)}")
 
     try:
         process = subprocess.Popen(
@@ -168,64 +182,62 @@ def burn_iso_to_usb(iso_path: Path, device_path: str) -> None:
             if output == "" and process.poll() is not None:
                 break
             if output:
-                click.echo(output.strip())
+                print(output.strip())
 
         return_code = process.poll()
         if return_code != 0:
-            raise click.ClickException(
-                f"dd command failed with return code {return_code}"
-            )
+            print(f"[bold red]Error:[/bold red] dd command failed with return code {return_code}")
+            raise typer.Exit(code=1)
 
     except KeyboardInterrupt:
-        raise click.ClickException("Operation cancelled by user")
+        print("[bold red]Error:[/bold red] Operation cancelled by user")
+        raise typer.Exit(code=1)
     except Exception as e:
-        raise click.ClickException(f"Error during burning process: {e}") from e
+        print(f"[bold red]Error:[/bold red] during burning process: {e}")
+        raise typer.Exit(code=1)
 
-    click.secho("✓ Successfully burned ISO to USB!", fg="green")
+    print("[green]✓[/green] Successfully burned ISO to USB!")
 
-    click.echo("Syncing filesystem...")
+    print("Syncing filesystem...")
     try:
         subprocess.run(["sync"], check=True)
-        click.secho("✓ Sync completed", fg="green")
+        print("[green]✓[/green] Sync completed")
     except subprocess.CalledProcessError as e:
-        click.secho(f"Warning: Sync failed: {e}", fg="yellow")
+        print(f"[yellow]Warning:[/yellow] Sync failed: {e}")
 
 
-@click.command()
-@click.argument(
-    "iso_file",
-    type=click.Path(exists=True, dir_okay=False),
-)
-@click.option(
-    "--device",
-    "-d",
-    required=True,
-    help="USB device path (e.g., /dev/sdb). Use --list to see available devices.",
-)
-@click.option(
-    "--list",
-    "list_devices",
-    is_flag=True,
-    help="List available block devices and exit.",
-)
-@click.option(
-    "--dry-run",
-    "-n",
-    is_flag=True,
-    help="Show what would be done without actually doing it.",
-)
-@click.option(
-    "--force",
-    "-f",
-    is_flag=True,
-    help="Skip confirmation prompts.",
-)
 def main(
-    iso_file: str,
-    device: str,
-    list_devices: bool,
-    dry_run: bool,
-    force: bool,
+    iso_file: Annotated[
+        Path,
+        typer.Argument(
+            help="Path to the ISO file to burn.",
+            exists=True,
+            dir_okay=False,
+            resolve_path=True,
+        ),
+    ],
+    device: Annotated[
+        str,
+        typer.Option(
+            "--device",
+            "-d",
+            help="USB device path (e.g., /dev/sdb). Use --list to see available devices.",
+        ),
+    ] = "",
+    list_devices: Annotated[
+        bool,
+        typer.Option("--list", help="List available block devices and exit."),
+    ] = False,
+    dry_run: Annotated[
+        bool,
+        typer.Option(
+            "--dry-run", "-n", help="Show what would be done without actually doing it."
+        ),
+    ] = False,
+    force: Annotated[
+        bool,
+        typer.Option("--force", "-f", help="Skip confirmation prompts."),
+    ] = False,
 ) -> None:
     """
     Burn an ISO file to a USB drive with safety checks and progress monitoring.
@@ -251,52 +263,51 @@ def main(
         show_available_devices()
         return
 
-    iso_path = Path(iso_file).expanduser().resolve()
+    if not device:
+        print("[bold red]Error:[/bold red] --device is required. Use --list to see available devices.")
+        raise typer.Exit(code=1)
 
-    click.echo("Current block devices:")
+    print("Current block devices:")
     show_available_devices()
 
-    verify_iso_file(iso_path)
+    verify_iso_file(iso_file)
 
     if dry_run:
         if not os.path.exists(device):
-            raise click.ClickException(f"Device not found: {device}")
-        click.secho(f"✓ USB device exists: {device}", fg="green")
+            print(f"[bold red]Error:[/bold red] Device not found: {device}")
+            raise typer.Exit(code=1)
+        print(f"[green]✓[/green] USB device exists: {device}")
     else:
         verify_usb_device(device)
 
-    click.echo("\nOperation Summary:")
-    click.echo(f"  ISO file: {iso_path} ({iso_path.stat().st_size / (1024**3):.2f} GB)")
-    click.echo(f"  Target device: {device}")
+    print("\n[bold]Operation Summary:[/bold]")
+    print(f"  ISO file: {iso_file} ({iso_file.stat().st_size / (1024**3):.2f} GB)")
+    print(f"  Target device: {device}")
 
     if dry_run:
-        click.secho(
-            "\n🔍 DRY RUN MODE - No changes will be made!", fg="yellow", bold=True
-        )
-        click.echo("The following operations would be performed:")
-        click.echo(f"  1. Check and unmount any partitions on {device}")
-        click.echo(f"  2. Write {iso_path.name} to {device} using dd with 4MB blocks")
-        click.echo("  3. Sync filesystem to ensure data integrity")
-        click.secho("\n✓ Dry run completed - everything looks good!", fg="green")
-        click.echo("To actually burn the ISO, run without --dry-run flag.")
+        print("\n[yellow bold]🔍 DRY RUN MODE - No changes will be made![/yellow bold]")
+        print("The following operations would be performed:")
+        print(f"  1. Check and unmount any partitions on {device}")
+        print(f"  2. Write {iso_file.name} to {device} using dd with 4MB blocks")
+        print("  3. Sync filesystem to ensure data integrity")
+        print("\n[green]✓[/green] Dry run completed - everything looks good!")
+        print("To actually burn the ISO, run without --dry-run flag.")
         return
 
     if not force:
-        click.secho(
-            f"\n⚠️  WARNING: This will completely erase all data on {device}!",
-            fg="red",
-            bold=True,
+        print(
+            f"\n[red bold]⚠️  WARNING: This will completely erase all data on {device}![/red bold]"
         )
-        if not click.confirm("\nAre you absolutely sure you want to continue?"):
-            click.echo("Operation cancelled.")
+        if not typer.confirm("\nAre you absolutely sure you want to continue?"):
+            print("Operation cancelled.")
             return
 
     unmount_device_partitions(device)
-    burn_iso_to_usb(iso_path, device)
+    burn_iso_to_usb(iso_file, device)
 
-    click.secho("\n✓ ISO successfully burned to USB!", fg="green", bold=True)
-    click.echo(f"Your USB drive at {device} is now bootable.")
+    print("\n[green bold]✓ ISO successfully burned to USB![/green bold]")
+    print(f"Your USB drive at {device} is now bootable.")
 
 
 if __name__ == "__main__":
-    main()
+    typer.run(main)

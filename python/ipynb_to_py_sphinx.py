@@ -3,7 +3,8 @@
 # requires-python = ">=3.12"
 # category = "dev"
 # dependencies = [
-#     "click>=8.1.0",
+#     "typer>=0.15.0",
+#     "rich>=13.0.0",
 #     "pypandoc>=1.13",
 # ]
 # ///
@@ -14,9 +15,11 @@ Convert a Jupyter notebook to a Sphinx Gallery Python script.
 import json
 import re
 from pathlib import Path
+from typing import Annotated
 
-import click
 import pypandoc
+import typer
+from rich import print
 
 
 def convert_cell_to_rst(source: list[str]) -> str:
@@ -29,21 +32,33 @@ def convert_cell_to_rst(source: list[str]) -> str:
         return rst.replace(".. code::", ".. code-block::")
     except OSError as e:
         if "No pandoc was found" in str(e) or "pandoc: not found" in str(e):
-            raise click.ClickException(
-                "Pandoc not found. Please install pandoc (e.g. `brew install pandoc` or `sudo apt install pandoc`)."
-            ) from e
+            print(
+                "[bold red]Error:[/bold red] Pandoc not found. Please install pandoc "
+                "(e.g. `brew install pandoc` or `sudo apt install pandoc`)."
+            )
+            raise typer.Exit(code=1)
         raise
 
 
-@click.command()
-@click.argument("notebook", type=click.Path(exists=True, path_type=Path))
-@click.option(
-    "--output",
-    "-o",
-    type=click.Path(path_type=Path),
-    help="Output Python file path. Defaults to notebook name with .py extension.",
-)
-def main(notebook: Path, output: Path | None) -> None:
+def main(
+    notebook: Annotated[
+        Path,
+        typer.Argument(
+            help="The path to the input Jupyter notebook (.ipynb).",
+            exists=True,
+            resolve_path=True,
+        ),
+    ],
+    output: Annotated[
+        Path | None,
+        typer.Option(
+            "--output",
+            "-o",
+            help="Output Python file path. Defaults to notebook name with .py extension.",
+            resolve_path=True,
+        ),
+    ] = None,
+) -> None:
     """
     Convert a Jupyter notebook to a Sphinx Gallery Python script.
 
@@ -69,7 +84,8 @@ def main(notebook: Path, output: Path | None) -> None:
         with notebook.open("r", encoding="utf-8") as f:
             nb_dict = json.load(f)
     except json.JSONDecodeError as e:
-        raise click.ClickException(f"Invalid JSON in notebook file: {e}") from e
+        print(f"[bold red]Error:[/bold red] Invalid JSON in notebook file: {e}")
+        raise typer.Exit(code=1)
 
     cells: list[dict[str, object]] = nb_dict.get("cells", [])
     python_content: list[str] = []
@@ -80,7 +96,8 @@ def main(notebook: Path, output: Path | None) -> None:
 
         if i == 0:
             if cell_type != "markdown":
-                raise click.ClickException("First cell has to be markdown")
+                print("[bold red]Error:[/bold red] First cell has to be markdown")
+                raise typer.Exit(code=1)
 
             # First cell is usually the title/description
             rst_source = convert_cell_to_rst(source)
@@ -171,10 +188,11 @@ def main(notebook: Path, output: Path | None) -> None:
 
     try:
         output.write_text(final_content, encoding="utf-8")
-        click.secho(f"Converted {notebook} to {output}", fg="green")
+        print(f"[green]Converted {notebook} to {output}[/green]")
     except OSError as e:
-        raise click.ClickException(f"Failed to write output file: {e}") from e
+        print(f"[bold red]Error:[/bold red] Failed to write output file: {e}")
+        raise typer.Exit(code=1)
 
 
 if __name__ == "__main__":
-    main()
+    typer.run(main)

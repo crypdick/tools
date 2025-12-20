@@ -3,7 +3,8 @@
 # requires-python = ">=3.12"
 # category = "data"
 # dependencies = [
-#     "click>=8.1.0",
+#     "typer>=0.15.0",
+#     "rich>=13.0.0",
 #     "requests",
 #     "inscriptis",
 # ]
@@ -13,11 +14,13 @@ Fetch a webpage and convert its content to plain text.
 """
 
 import re
+from typing import Annotated
 from urllib.parse import urlparse
 
-import click
 import requests
+import typer
 from inscriptis import get_text
+from rich import print
 
 
 def normalize_url(url: str) -> str:
@@ -50,21 +53,18 @@ def clean_text(text: str) -> str:
     return text.strip()
 
 
-@click.command()
-@click.argument("url")
-@click.option(
-    "--timeout",
-    "-t",
-    type=int,
-    default=15,
-    help="Request timeout in seconds.",
-)
-@click.option(
-    "--raw",
-    is_flag=True,
-    help="Skip whitespace cleanup (preserve original formatting).",
-)
-def main(url: str, timeout: int, raw: bool) -> None:
+def main(
+    url: Annotated[str, typer.Argument(help="The webpage URL to fetch.")],
+    timeout: Annotated[
+        int, typer.Option("--timeout", "-t", help="Request timeout in seconds.")
+    ] = 15,
+    raw: Annotated[
+        bool,
+        typer.Option(
+            "--raw", help="Skip whitespace cleanup (preserve original formatting)."
+        ),
+    ] = False,
+) -> None:
     """
     Fetch a webpage and convert its readable content to plain text.
 
@@ -88,18 +88,20 @@ def main(url: str, timeout: int, raw: bool) -> None:
     try:
         html = fetch_url(target_url, timeout=timeout)
     except requests.RequestException as e:
-        raise click.ClickException(f"Failed to fetch {target_url}: {e}") from e
+        print(f"[bold red]Error:[/bold red] Failed to fetch {target_url}: {e}")
+        raise typer.Exit(code=1) from e
 
     try:
         text = html_to_text(html)
     except Exception as e:
-        raise click.ClickException(f"Failed to convert HTML to text: {e}") from e
+        print(f"[bold red]Error:[/bold red] Failed to convert HTML to text: {e}")
+        raise typer.Exit(code=1) from e
 
     if not raw:
         text = clean_text(text)
 
-    click.echo(text)
+    print(text)
 
 
 if __name__ == "__main__":
-    main()
+    typer.run(main)
