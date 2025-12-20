@@ -49,7 +49,9 @@ def show_available_devices() -> None:
         model = device.get("model", "") or ""
 
         if device_type == "disk":
-            click.echo(f"/dev/{name:<8} {size:<10} {device_type:<8} {mountpoint:<20} {model}")
+            click.echo(
+                f"/dev/{name:<8} {size:<10} {device_type:<8} {mountpoint:<20} {model}"
+            )
 
     click.echo("-" * 70)
 
@@ -125,7 +127,9 @@ def unmount_device_partitions(device_path: str) -> None:
                     subprocess.run(["sudo", "umount", partition], check=True)
                     click.secho(f"✓ Unmounted {partition}", fg="green")
                 except subprocess.CalledProcessError as e:
-                    raise click.ClickException(f"Failed to unmount {partition}: {e}") from e
+                    raise click.ClickException(
+                        f"Failed to unmount {partition}: {e}"
+                    ) from e
         else:
             click.echo("No mounted partitions found")
 
@@ -168,7 +172,9 @@ def burn_iso_to_usb(iso_path: Path, device_path: str) -> None:
 
         return_code = process.poll()
         if return_code != 0:
-            raise click.ClickException(f"dd command failed with return code {return_code}")
+            raise click.ClickException(
+                f"dd command failed with return code {return_code}"
+            )
 
     except KeyboardInterrupt:
         raise click.ClickException("Operation cancelled by user")
@@ -259,12 +265,14 @@ def main(
     else:
         verify_usb_device(device)
 
-    click.echo(f"\nOperation Summary:")
+    click.echo("\nOperation Summary:")
     click.echo(f"  ISO file: {iso_path} ({iso_path.stat().st_size / (1024**3):.2f} GB)")
     click.echo(f"  Target device: {device}")
 
     if dry_run:
-        click.secho("\n🔍 DRY RUN MODE - No changes will be made!", fg="yellow", bold=True)
+        click.secho(
+            "\n🔍 DRY RUN MODE - No changes will be made!", fg="yellow", bold=True
+        )
         click.echo("The following operations would be performed:")
         click.echo(f"  1. Check and unmount any partitions on {device}")
         click.echo(f"  2. Write {iso_path.name} to {device} using dd with 4MB blocks")
@@ -292,4 +300,3 @@ def main(
 
 if __name__ == "__main__":
     main()
-

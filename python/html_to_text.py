@@ -30,9 +30,7 @@ def normalize_url(url: str) -> str:
 
 def fetch_url(url: str, timeout: int) -> str:
     """Fetch a URL and return HTML text."""
-    headers = {
-        "User-Agent": "Mozilla/5.0 (compatible; html_to_text/1.0)"
-    }
+    headers = {"User-Agent": "Mozilla/5.0 (compatible; html_to_text/1.0)"}
     response = requests.get(url, headers=headers, timeout=timeout)
     response.raise_for_status()
     response.encoding = response.apparent_encoding
@@ -105,4 +103,3 @@ def main(url: str, timeout: int, raw: bool) -> None:
 
 if __name__ == "__main__":
     main()
-

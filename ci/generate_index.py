@@ -377,12 +377,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         <h1>Ricardo Decal's Tools</h1>
         <p class="subtitle">Simple, self-contained, and immediately runnable</p>
 
-        <div style="margin-bottom: 2rem;">
-            <a href="https://github.com/crypdick/tools" class="repo-link">
-                📦 View on GitHub
-            </a>
-        </div>
-
         {content}
 
         <footer>
