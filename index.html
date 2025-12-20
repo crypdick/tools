@@ -340,10 +340,9 @@
 <details class="tool">
 <summary><a href="python/convert_arrow_to_parquet_streaming.py"><code>convert_arrow_to_parquet_streaming.py</code></a></summary>
 <div class="content">
-Output of `uv run https://tools.ricardodecal.com/python/convert_arrow_to_parquet_streaming.py --help`:
+Output of <code>uv run https://tools.ricardodecal.com/python/convert_arrow_to_parquet_streaming.py --help</code>:
 
-
-<pre><code class="language-text">Usage: convert_arrow_to_parquet_streaming.py [OPTIONS]
+<pre><code>Usage: convert_arrow_to_parquet_streaming.py [OPTIONS]
 
   Convert Arrow shards to Parquet.
 
@@ -379,10 +378,9 @@ Options:
 <details class="tool">
 <summary><a href="python/count_parquet_rows.py"><code>count_parquet_rows.py</code></a></summary>
 <div class="content">
-Output of `uv run https://tools.ricardodecal.com/python/count_parquet_rows.py --help`:
+Output of <code>uv run https://tools.ricardodecal.com/python/count_parquet_rows.py --help</code>:
 
-
-<pre><code class="language-text">Usage: count_parquet_rows.py [OPTIONS] DATASET_PATH
+<pre><code>Usage: count_parquet_rows.py [OPTIONS] DATASET_PATH
 
   Count the number of rows in a parquet file/dataset without reading data into
   memory.
@@ -421,15 +419,14 @@ Options:
 <details class="tool">
 <summary><a href="python/download_video.py"><code>download_video.py</code></a></summary>
 <div class="content">
-Output of `uv run https://tools.ricardodecal.com/python/download_video.py --help`:
+Output of <code>uv run https://tools.ricardodecal.com/python/download_video.py --help</code>:
 
-
-<pre><code class="language-text">Usage: download_video.py [OPTIONS] URL
+<pre><code>Usage: download_video.py [OPTIONS] URL
 
   Download a video from a supported platform (Twitter/X, YouTube, etc.).
 
   Uses yt-dlp to download videos from a wide variety of websites. Twitter
-  &quot;GIFs&quot; are actually MP4 videos, which this tool can also download.
+  "GIFs" are actually MP4 videos, which this tool can also download.
 
   Arguments:
 
@@ -455,10 +452,9 @@ Options:
 <details class="tool">
 <summary><a href="python/yt_transcript.py"><code>yt_transcript.py</code></a></summary>
 <div class="content">
-Output of `uv run https://tools.ricardodecal.com/python/yt_transcript.py --help`:
+Output of <code>uv run https://tools.ricardodecal.com/python/yt_transcript.py --help</code>:
 
-
-<pre><code class="language-text">Usage: yt_transcript.py [OPTIONS] URL [OUTPUT_FILE]
+<pre><code>Usage: yt_transcript.py [OPTIONS] URL [OUTPUT_FILE]
 
   Download transcripts from a YouTube URL (video or playlist) to a single
   file.
@@ -469,8 +465,8 @@ Output of `uv run https://tools.ricardodecal.com/python/yt_transcript.py --help`
 
   Examples:
 
-      uv run https://tools.ricardodecal.com/python/yt_transcript.py &quot;https://youtu.be/...&quot;
-      uv run https://tools.ricardodecal.com/python/yt_transcript.py &quot;https://youtube.com/playlist?list=...&quot; out.txt
+      uv run https://tools.ricardodecal.com/python/yt_transcript.py "https://youtu.be/..."
+      uv run https://tools.ricardodecal.com/python/yt_transcript.py "https://youtube.com/playlist?list=..." out.txt
 
 Options:
   -l, --lang TEXT  Language codes to prefer (e.g. -l en -l fr)
@@ -487,15 +483,14 @@ Options:
 <details class="tool">
 <summary><a href="python/dedup_dirs.py"><code>dedup_dirs.py</code></a></summary>
 <div class="content">
-Output of `uv run https://tools.ricardodecal.com/python/dedup_dirs.py --help`:
+Output of <code>uv run https://tools.ricardodecal.com/python/dedup_dirs.py --help</code>:
 
-
-<pre><code class="language-text">Usage: dedup_dirs.py [OPTIONS] OLD_DIR NEW_DIR
+<pre><code>Usage: dedup_dirs.py [OPTIONS] OLD_DIR NEW_DIR
 
   Find duplicate files between OLD_DIR and NEW_DIR, optionally deleting from
   OLD_DIR.
 
-  Compares files by path and content. For large files (&gt;10MB), uses sampling
+  Compares files by path and content. For large files (>10MB), uses sampling
   for speed. For smaller files, compares MD5 hashes. Runs in parallel for
   performance on large directory trees.
 
@@ -531,14 +526,13 @@ Options:
 <details class="tool">
 <summary><a href="python/strip_pdf_metadata.py"><code>strip_pdf_metadata.py</code></a></summary>
 <div class="content">
-Output of `uv run https://tools.ricardodecal.com/python/strip_pdf_metadata.py --help`:
+Output of <code>uv run https://tools.ricardodecal.com/python/strip_pdf_metadata.py --help</code>:
 
-
-<pre><code class="language-text">Usage: strip_pdf_metadata.py [OPTIONS] INPUT_FILE [OUTPUT_FILE]
+<pre><code>Usage: strip_pdf_metadata.py [OPTIONS] INPUT_FILE [OUTPUT_FILE]
 
   Strip metadata from a PDF file.
 
-  If OUTPUT_FILE is not provided, writes to 'stripped_&lt;INPUT_FILE&gt;'.
+  If OUTPUT_FILE is not provided, writes to 'stripped_<INPUT_FILE>'.
 
 Options:
   --help  Show this message and exit.
@@ -554,10 +548,9 @@ Options:
 <details class="tool">
 <summary><a href="python/ipynb_to_py_sphinx.py"><code>ipynb_to_py_sphinx.py</code></a></summary>
 <div class="content">
-Output of `uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py --help`:
+Output of <code>uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py --help</code>:
 
-
-<pre><code class="language-text">Usage: ipynb_to_py_sphinx.py [OPTIONS] NOTEBOOK
+<pre><code>Usage: ipynb_to_py_sphinx.py [OPTIONS] NOTEBOOK
 
   Convert a Jupyter notebook to a Sphinx Gallery Python script.
 
