@@ -33,7 +33,7 @@ CATEGORY_TITLES = {
 
 # Tool type labels
 TYPE_LABELS = {
-    "script": "script",
+    "script": "python",
     "page": "page",
 }
 
