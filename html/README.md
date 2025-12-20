@@ -30,9 +30,12 @@ See also: [Simon Willison's tools collection](https://tools.simonwillison.net/) 
 
 ### Required Structure
 
-Start with this template to ensure consistency and mobile compatibility:
+Start with this template to ensure consistency and mobile compatibility.
 
 ```html
+<!--
+category: data
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -120,6 +123,24 @@ Start with this template to ensure consistency and mobile compatibility:
 </body>
 </html>
 ```
+
+### Metadata Comment
+
+The metadata comment at the top of each tool is **required**:
+
+```html
+<!--
+category: data
+-->
+```
+
+- `category` — **Required.** One of: `data`, `dev`, `misc`. Check generate_readme.py for the latest categories.
+
+Additionally, each tool **must have**:
+- A `<title>` tag with the tool name
+- A `<p class="subtitle">` element with a one-line description
+
+These are enforced by `ci/check_html_metadata.py`.
 
 ### Prototyping with LLMs
 
