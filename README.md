@@ -21,10 +21,9 @@ Inspired by [Simon Willison's tools collection](https://github.com/simonw/tools)
 <details>
 <summary><a href="python/convert_arrow_to_parquet_streaming.py"><code>convert_arrow_to_parquet_streaming.py</code></a></summary>
 
-Output of `uv run https://tools.ricardodecal.com/python/convert_arrow_to_parquet_streaming.py --help`:
+Output of <code>uv run https://tools.ricardodecal.com/python/convert_arrow_to_parquet_streaming.py --help</code>:
 
-```text
-Usage: convert_arrow_to_parquet_streaming.py [OPTIONS]
+<pre><code>Usage: convert_arrow_to_parquet_streaming.py [OPTIONS]
 
   Convert Arrow shards to Parquet.
 
@@ -53,17 +52,16 @@ Options:
   --preserve-subdirs      Preserve input subdirectory structure inside output
                           dir
   --help                  Show this message and exit.
-```
+</code></pre>
 
 </details>
 
 <details>
 <summary><a href="python/count_parquet_rows.py"><code>count_parquet_rows.py</code></a></summary>
 
-Output of `uv run https://tools.ricardodecal.com/python/count_parquet_rows.py --help`:
+Output of <code>uv run https://tools.ricardodecal.com/python/count_parquet_rows.py --help</code>:
 
-```text
-Usage: count_parquet_rows.py [OPTIONS] DATASET_PATH
+<pre><code>Usage: count_parquet_rows.py [OPTIONS] DATASET_PATH
 
   Count the number of rows in a parquet file/dataset without reading data into
   memory.
@@ -90,7 +88,7 @@ Usage: count_parquet_rows.py [OPTIONS] DATASET_PATH
 
 Options:
   --help  Show this message and exit.
-```
+</code></pre>
 
 </details>
 
@@ -102,10 +100,9 @@ Options:
 <details>
 <summary><a href="python/download_video.py"><code>download_video.py</code></a></summary>
 
-Output of `uv run https://tools.ricardodecal.com/python/download_video.py --help`:
+Output of <code>uv run https://tools.ricardodecal.com/python/download_video.py --help</code>:
 
-```text
-Usage: download_video.py [OPTIONS] URL
+<pre><code>Usage: download_video.py [OPTIONS] URL
 
   Download a video from a supported platform (Twitter/X, YouTube, etc.).
 
@@ -129,17 +126,16 @@ Options:
                      directory path. Defaults to 'Title [ID].mp4' in current
                      directory.
   --help             Show this message and exit.
-```
+</code></pre>
 
 </details>
 
 <details>
 <summary><a href="python/yt_transcript.py"><code>yt_transcript.py</code></a></summary>
 
-Output of `uv run https://tools.ricardodecal.com/python/yt_transcript.py --help`:
+Output of <code>uv run https://tools.ricardodecal.com/python/yt_transcript.py --help</code>:
 
-```text
-Usage: yt_transcript.py [OPTIONS] URL [OUTPUT_FILE]
+<pre><code>Usage: yt_transcript.py [OPTIONS] URL [OUTPUT_FILE]
 
   Download transcripts from a YouTube URL (video or playlist) to a single
   file.
@@ -156,7 +152,7 @@ Usage: yt_transcript.py [OPTIONS] URL [OUTPUT_FILE]
 Options:
   -l, --lang TEXT  Language codes to prefer (e.g. -l en -l fr)
   --help           Show this message and exit.
-```
+</code></pre>
 
 </details>
 
@@ -168,10 +164,9 @@ Options:
 <details>
 <summary><a href="python/dedup_dirs.py"><code>dedup_dirs.py</code></a></summary>
 
-Output of `uv run https://tools.ricardodecal.com/python/dedup_dirs.py --help`:
+Output of <code>uv run https://tools.ricardodecal.com/python/dedup_dirs.py --help</code>:
 
-```text
-Usage: dedup_dirs.py [OPTIONS] OLD_DIR NEW_DIR
+<pre><code>Usage: dedup_dirs.py [OPTIONS] OLD_DIR NEW_DIR
 
   Find duplicate files between OLD_DIR and NEW_DIR, optionally deleting from
   OLD_DIR.
@@ -205,17 +200,16 @@ Options:
   --delete               Actually delete identical files (default is dry run).
   -w, --workers INTEGER  Number of parallel workers.
   --help                 Show this message and exit.
-```
+</code></pre>
 
 </details>
 
 <details>
 <summary><a href="python/strip_pdf_metadata.py"><code>strip_pdf_metadata.py</code></a></summary>
 
-Output of `uv run https://tools.ricardodecal.com/python/strip_pdf_metadata.py --help`:
+Output of <code>uv run https://tools.ricardodecal.com/python/strip_pdf_metadata.py --help</code>:
 
-```text
-Usage: strip_pdf_metadata.py [OPTIONS] INPUT_FILE [OUTPUT_FILE]
+<pre><code>Usage: strip_pdf_metadata.py [OPTIONS] INPUT_FILE [OUTPUT_FILE]
 
   Strip metadata from a PDF file.
 
@@ -223,7 +217,7 @@ Usage: strip_pdf_metadata.py [OPTIONS] INPUT_FILE [OUTPUT_FILE]
 
 Options:
   --help  Show this message and exit.
-```
+</code></pre>
 
 </details>
 
@@ -235,10 +229,9 @@ Options:
 <details>
 <summary><a href="python/ipynb_to_py_sphinx.py"><code>ipynb_to_py_sphinx.py</code></a></summary>
 
-Output of `uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py --help`:
+Output of <code>uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py --help</code>:
 
-```text
-Usage: ipynb_to_py_sphinx.py [OPTIONS] NOTEBOOK
+<pre><code>Usage: ipynb_to_py_sphinx.py [OPTIONS] NOTEBOOK
 
   Convert a Jupyter notebook to a Sphinx Gallery Python script.
 
@@ -263,7 +256,7 @@ Options:
   -o, --output PATH  Output Python file path. Defaults to notebook name with
                      .py extension.
   --help             Show this message and exit.
-```
+</code></pre>
 
 </details>
 

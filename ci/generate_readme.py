@@ -104,14 +104,13 @@ def format_tool_readme(info: ToolInfo) -> str:
     doc = pattern.sub(replacement, doc)
     doc = raw_pattern.sub(replacement, doc)
 
-    # Format as nested details element
+    # Format as nested details element (use HTML tags since markdown isn't processed in HTML blocks)
     output = f"""<details>
 <summary><a href="python/{info.filename}"><code>{info.filename}</code></a></summary>
 
-Output of `uv run https://{DOMAIN}/python/{info.filename} --help`:
+Output of <code>uv run https://{DOMAIN}/python/{info.filename} --help</code>:
 
-```text
-{doc}```
+<pre><code>{doc}</code></pre>
 
 </details>
 """
