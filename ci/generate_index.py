@@ -282,6 +282,24 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             margin-left: 0.5rem;
         }
 
+        /* HTML page entries (non-collapsible, styled like tools) */
+        .page {
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            margin: 0.5rem 0;
+            margin-left: 1.5rem;
+            background: var(--tool-bg);
+        }
+
+        .page p {
+            margin: 0.25rem 0;
+        }
+
+        .page p:first-child {
+            font-weight: 500;
+        }
+
         /* Fallback for any details without a class */
         details:not(.category):not(.tool) {
             border: 1px solid var(--border);
