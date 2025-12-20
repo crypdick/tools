@@ -31,6 +31,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             --link: #0969da;
             --border: #d0d7de;
             --code-bg: #f6f8fa;
+            --category-bg: #f6f8fa;
+            --tool-bg: #ffffff;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -40,6 +42,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 --link: #58a6ff;
                 --border: #30363d;
                 --code-bg: #161b22;
+                --category-bg: #161b22;
+                --tool-bg: #0d1117;
             }
         }
 
@@ -166,7 +170,105 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             margin-top: 3rem;
         }
 
-        details {
+        /* Category-level details (outer) */
+        details.category {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin: 1rem 0;
+            background: var(--category-bg);
+        }
+
+        details.category[open] {
+            padding-bottom: 1rem;
+        }
+
+        details.category > summary {
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.2rem;
+            user-select: none;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        details.category > summary::-webkit-details-marker {
+            display: none;
+        }
+
+        details.category > summary::before {
+            content: '▶';
+            display: inline-block;
+            transition: transform 0.2s;
+            font-size: 0.8em;
+        }
+
+        details.category[open] > summary::before {
+            transform: rotate(90deg);
+        }
+
+        details.category > summary:hover {
+            color: var(--link);
+        }
+
+        /* Tool-level details (nested inside category) */
+        details.tool {
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.5rem 0.75rem;
+            margin: 0.5rem 0;
+            margin-left: 1.5rem;
+            background: var(--tool-bg);
+        }
+
+        details.tool[open] {
+            padding-bottom: 0.75rem;
+        }
+
+        details.tool > summary {
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1rem;
+            user-select: none;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        details.tool > summary::-webkit-details-marker {
+            display: none;
+        }
+
+        details.tool > summary::before {
+            content: '▸';
+            display: inline-block;
+            transition: transform 0.2s;
+            font-size: 0.7em;
+        }
+
+        details.tool[open] > summary::before {
+            transform: rotate(90deg);
+        }
+
+        details.tool > summary:hover {
+            color: var(--link);
+        }
+
+        details.tool .content {
+            margin-top: 0.75rem;
+            padding-left: 1rem;
+        }
+
+        details.tool pre {
+            margin: 0.5rem 0;
+            font-size: 0.85em;
+        }
+
+        /* Fallback for any details without a class */
+        details:not(.category):not(.tool) {
             border: 1px solid var(--border);
             border-radius: 6px;
             padding: 0.75rem 1rem;
@@ -174,11 +276,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             background: var(--code-bg);
         }
 
-        details[open] {
+        details:not(.category):not(.tool)[open] {
             padding-bottom: 1rem;
         }
 
-        summary {
+        details:not(.category):not(.tool) > summary {
             cursor: pointer;
             font-weight: 600;
             font-size: 1.1rem;
@@ -189,26 +291,26 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             gap: 0.5rem;
         }
 
-        summary::-webkit-details-marker {
+        details:not(.category):not(.tool) > summary::-webkit-details-marker {
             display: none;
         }
 
-        summary::before {
+        details:not(.category):not(.tool) > summary::before {
             content: '▶';
             display: inline-block;
             transition: transform 0.2s;
             font-size: 0.8em;
         }
 
-        details[open] summary::before {
+        details:not(.category):not(.tool)[open] > summary::before {
             transform: rotate(90deg);
         }
 
-        summary:hover {
+        details:not(.category):not(.tool) > summary:hover {
             color: var(--link);
         }
 
-        details .content {
+        details:not(.category):not(.tool) .content {
             margin-top: 1rem;
             padding-left: 1.3rem;
         }
@@ -265,23 +367,48 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 """
 
 
-def wrap_tools_in_details(html: str) -> str:
-    """Wrap each H3 tool section in a collapsible details element."""
-    # Pattern to match H3 headings and their content until the next H3 or H2
-    pattern = r'(<h3>.*?</h3>)(.*?)(?=<h3>|<h2>|$)'
+def add_details_classes(html: str) -> str:
+    """Add CSS classes to nested details elements for styling.
 
-    def replace_tool(match):
-        h3_tag = match.group(1)
-        content = match.group(2)
+    Category-level details (summaries with <strong>) get class="category".
+    Tool-level details (summaries with <code>) get class="tool".
+    """
 
-        # Extract the tool name from the h3 tag
-        tool_name_match = re.search(r'<a[^>]*>([^<]+)</a>', h3_tag)
-        if tool_name_match:
-            tool_name = tool_name_match.group(1)
-            return f'<details>\n<summary>{tool_name}</summary>\n<div class="content">\n{content.strip()}\n</div>\n</details>\n'
-        return h3_tag + content
+    def classify_details(match: re.Match[str]) -> str:
+        summary = match.group(1)
+        # Categories have <strong> in their summary (e.g., <strong>Data</strong>)
+        # Tools have <code> in their summary (e.g., <code>tool.py</code>)
+        if "<strong>" in summary:
+            return f'<details class="category">\n<summary>{summary}</summary>'
+        else:
+            return f'<details class="tool">\n<summary>{summary}</summary>'
 
-    return re.sub(pattern, replace_tool, html, flags=re.DOTALL)
+    # Match <details> followed by <summary>...</summary>
+    result = re.sub(
+        r"<details>\s*<summary>(.*?)</summary>",
+        classify_details,
+        html,
+        flags=re.DOTALL,
+    )
+
+    return result
+
+
+def wrap_tool_content(html: str) -> str:
+    """Wrap tool content (everything after summary) in a content div."""
+    # Pattern: find tool details and wrap content after summary
+    pattern = r'(<details class="tool">)\s*(<summary>.*?</summary>)\s*(.*?)(</details>)'
+
+    def wrap_content(match: re.Match[str]) -> str:
+        opening = match.group(1)
+        summary = match.group(2)
+        content = match.group(3).strip()
+        closing = match.group(4)
+        return (
+            f'{opening}\n{summary}\n<div class="content">\n{content}\n</div>\n{closing}'
+        )
+
+    return re.sub(pattern, wrap_content, html, flags=re.DOTALL)
 
 
 def generate_index() -> None:
@@ -307,13 +434,19 @@ def generate_index() -> None:
     # Convert README to HTML
     html_content = markdown.markdown(content, extensions=["fenced_code", "tables"])
 
-    # Wrap tool sections in collapsible details elements
-    html_content = wrap_tools_in_details(html_content)
+    # Add CSS classes to details elements
+    html_content = add_details_classes(html_content)
+
+    # Wrap tool content in content divs
+    html_content = wrap_tool_content(html_content)
 
     # Inject into template with current date
     from datetime import datetime
+
     current_date = datetime.now().strftime("%B %d, %Y")
-    final_html = HTML_TEMPLATE.replace("{content}", html_content).replace("{date}", current_date)
+    final_html = HTML_TEMPLATE.replace("{content}", html_content).replace(
+        "{date}", current_date
+    )
 
     # Ensure single trailing newline and no trailing whitespace on lines
     lines = [line.rstrip() for line in final_html.splitlines()]

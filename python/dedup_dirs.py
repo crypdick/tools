@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # /// script
 # requires-python = ">=3.12"
+# category = "files"
 # dependencies = [
 #     "click>=8.1.0",
 #     "rich>=13.0.0",
