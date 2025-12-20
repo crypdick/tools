@@ -214,15 +214,12 @@ Output of <code>uv run https://{DOMAIN}/python/{info.filename} --help</code>:
 
 
 def format_html_tool_readme(info: ToolInfo) -> str:
-    """Format an HTML tool for the README."""
-    return f"""<details>
-<summary><a href="html/{info.filename}"><code>{info.filename}</code></a> <kbd>{TYPE_LABELS[info.tool_type]}</kbd></summary>
-
-Open in browser: <a href="https://{DOMAIN}/html/{info.filename}">https://{DOMAIN}/html/{info.filename}</a>
-
+    """Format an HTML tool for the README (no collapse since descriptions are short)."""
+    return f"""<p>
+<a href="html/{info.filename}"><code>{info.filename}</code></a> <kbd>{TYPE_LABELS[info.tool_type]}</kbd><br>
+<a href="https://{DOMAIN}/html/{info.filename}">https://{DOMAIN}/html/{info.filename}</a><br>
 {info.description}
-
-</details>
+</p>
 """
 
 
