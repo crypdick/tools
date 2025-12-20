@@ -3,7 +3,8 @@
 # requires-python = ">=3.12"
 # category = "data"
 # dependencies = [
-#     "click",
+#     "typer>=0.15.0",
+#     "rich>=13.0.0",
 #     "youtube-transcript-api",
 #     "yt-dlp",
 # ]
@@ -20,8 +21,11 @@ Examples:
 
 import sys
 from pathlib import Path
+from typing import Annotated
 
-import click
+import typer
+from rich import print
+from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, MofNCompleteColumn
 from youtube_transcript_api import (
     NoTranscriptFound,
     TranscriptsDisabled,
@@ -45,15 +49,16 @@ def get_video_list(url: str) -> list[dict[str, str | None]]:
     videos: list[dict[str, str | None]] = []
     try:
         with YoutubeDL(ydl_opts) as ydl:
-            click.echo(f"Fetching metadata for {url}...")
+            print(f"Fetching metadata for {url}...")
             info = ydl.extract_info(url, download=False)
 
             if not info:
-                raise click.ClickException("Could not fetch video info.")
+                print("[bold red]Error:[/bold red] Could not fetch video info.")
+                raise typer.Exit(code=1)
 
             if "entries" in info:
                 # It's a playlist or channel
-                click.echo(f"Found playlist: {info.get('title', 'Unknown')}")
+                print(f"Found playlist: {info.get('title', 'Unknown')}")
                 entries = info["entries"]
                 for e in entries:
                     if e:
@@ -68,8 +73,11 @@ def get_video_list(url: str) -> list[dict[str, str | None]]:
                 videos.append(
                     {"id": info.get("id"), "title": info.get("title", "Unknown Title")}
                 )
+    except typer.Exit:
+        raise
     except Exception as e:
-        raise click.ClickException(f"Error fetching metadata: {e}") from e
+        print(f"[bold red]Error:[/bold red] fetching metadata: {e}")
+        raise typer.Exit(code=1)
 
     return videos
 
@@ -92,7 +100,7 @@ def get_transcript_text(
     except (TranscriptsDisabled, NoTranscriptFound):
         return None
     except Exception as e:
-        click.echo(f"Error fetching transcript for {video_id}: {e}", err=True)
+        print(f"[dim]Error fetching transcript for {video_id}: {e}[/dim]", file=sys.stderr)
         return None
 
     # Concatenate all text segments
@@ -100,56 +108,68 @@ def get_transcript_text(
     return "\n".join(lines)
 
 
-@click.command()
-@click.argument("url")
-@click.argument(
-    "output_file", type=click.Path(writable=True, path_type=Path), required=False
-)
-@click.option(
-    "--lang",
-    "-l",
-    multiple=True,
-    default=["en", "en-US", "en-GB"],
-    help="Language codes to prefer (e.g. -l en -l fr)",
-)
-def main(url: str, output_file: Path | None, lang: list[str]) -> None:
+def main(
+    url: Annotated[str, typer.Argument(help="YouTube video or playlist URL.")],
+    output_file: Annotated[
+        Path | None,
+        typer.Argument(
+            help="Path to save the transcript text. Defaults to transcript.txt.",
+            resolve_path=True,
+        ),
+    ] = None,
+    lang: Annotated[
+        list[str] | None,
+        typer.Option(
+            "--lang",
+            "-l",
+            help="Language codes to prefer (e.g. -l en -l fr)",
+        ),
+    ] = None,
+) -> None:
     """
     Download transcripts from a YouTube URL (video or playlist) to a single file.
 
-    \b
     Arguments:
         URL: YouTube video or playlist URL.
         OUTPUT_FILE: Path to save the transcript text. Defaults to transcript.txt.
 
     Examples:
 
-    \b
         uv run python/yt_transcript.py "https://youtu.be/..."
+
         uv run python/yt_transcript.py "https://youtube.com/playlist?list=..." out.txt
     """
+    if lang is None:
+        lang = ["en", "en-US", "en-GB"]
+
     if output_file is None:
         output_file = Path.cwd() / "transcript.txt"
-    else:
-        # Expand user path (~) if provided
-        output_file = output_file.expanduser().resolve()
 
     videos = get_video_list(url)
 
     if not videos:
-        click.echo("No videos found.")
+        print("[yellow]No videos found.[/yellow]")
         return
 
-    click.echo(f"Found {len(videos)} video(s). Processing...")
+    print(f"Found {len(videos)} video(s). Processing...")
 
     parts = []
     success_count = 0
 
-    with click.progressbar(videos, label="Fetching transcripts") as bar:
-        for i, video in enumerate(bar, start=1):
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        MofNCompleteColumn(),
+    ) as progress:
+        task = progress.add_task("Fetching transcripts", total=len(videos))
+
+        for i, video in enumerate(videos, start=1):
             vid = video["id"]
             title = video["title"]
 
             if not vid:
+                progress.advance(task)
                 continue
 
             txt = get_transcript_text(vid, languages=list(lang))
@@ -159,11 +179,11 @@ def main(url: str, output_file: Path | None, lang: list[str]) -> None:
                 header = f"\n\n===== VIDEO {i}: {title} ({vid}) =====\n\n"
                 parts.append(header + txt)
                 success_count += 1
-            # We don't print "skipping" inside the progress bar to avoid clutter,
-            # unless we want to use bar.update with item_show_func
+
+            progress.advance(task)
 
     if not parts:
-        click.secho("No transcripts were found for any videos.", fg="yellow")
+        print("[yellow]No transcripts were found for any videos.[/yellow]")
         sys.exit(1)
 
     full_text = "".join(parts)
@@ -171,10 +191,10 @@ def main(url: str, output_file: Path | None, lang: list[str]) -> None:
     full_text = full_text.lstrip()
 
     output_file.write_text(full_text, encoding="utf-8")
-    click.secho(
-        f"\nSuccessfully wrote {success_count} transcripts to {output_file}", fg="green"
+    print(
+        f"\n[green]Successfully wrote {success_count} transcripts to {output_file}[/green]"
     )
 
 
 if __name__ == "__main__":
-    main()
+    typer.run(main)

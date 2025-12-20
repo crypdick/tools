@@ -3,7 +3,8 @@
 # requires-python = ">=3.12"
 # category = "data"
 # dependencies = [
-#     "click",
+#     "typer>=0.15.0",
+#     "rich>=13.0.0",
 #     "pyarrow",
 # ]
 # ///
@@ -12,14 +13,16 @@ Count rows in a parquet dataset (local or S3) using metadata headers.
 """
 
 import os
+from typing import Annotated
 
-import click
 import pyarrow.dataset as ds
+import typer
+from rich import print
 
 
-@click.command()
-@click.argument("dataset_path")
-def main(dataset_path: str) -> None:
+def main(
+    dataset_path: Annotated[str, typer.Argument(help="Local file path or S3 URI.")],
+) -> None:
     """
     Count the number of rows in a parquet file/dataset without reading data into memory.
 
@@ -54,10 +57,11 @@ def main(dataset_path: str) -> None:
             for fragment in dataset.get_fragments()
             for row_group in fragment.row_groups
         )
-        click.echo(row_count)
+        print(row_count)
     except Exception as e:
-        raise click.ClickException(f"Failed to count rows: {e}") from e
+        print(f"[bold red]Error:[/bold red] Failed to count rows: {e}")
+        raise typer.Exit(code=1)
 
 
 if __name__ == "__main__":
-    main()
+    typer.run(main)

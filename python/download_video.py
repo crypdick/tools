@@ -3,7 +3,8 @@
 # requires-python = ">=3.12"
 # category = "data"
 # dependencies = [
-#     "click>=8.1.0",
+#     "typer>=0.15.0",
+#     "rich>=13.0.0",
 #     "yt-dlp",
 # ]
 # ///
@@ -13,20 +14,24 @@ Download videos from various platforms (Twitter/X, YouTube, etc.).
 
 import os
 from pathlib import Path
+from typing import Annotated
 
-import click
+import typer
 import yt_dlp
+from rich import print
 
 
-@click.command()
-@click.argument("url")
-@click.option(
-    "--output",
-    "-o",
-    type=click.Path(writable=True),
-    help="Output filepath (optional). Can be a file path or a directory path. Defaults to 'Title [ID].mp4' in current directory.",
-)
-def main(url: str, output: str | None) -> None:
+def main(
+    url: Annotated[str, typer.Argument(help="The URL of the video page.")],
+    output: Annotated[
+        str | None,
+        typer.Option(
+            "--output",
+            "-o",
+            help="Output filepath (file or directory). Defaults to 'Title [ID].mp4' in current directory.",
+        ),
+    ] = None,
+) -> None:
     """
     Download a video from a supported platform (Twitter/X, YouTube, etc.).
 
@@ -43,7 +48,7 @@ def main(url: str, output: str | None) -> None:
 
         uv run python/download_video.py https://www.youtube.com/watch?v=dQw4w9WgXcQ --output my_video.mp4
     """
-    ydl_opts = {
+    ydl_opts: dict[str, object] = {
         "format": "best",
         # Default filename format: Title (truncated) [ID].extension
         "outtmpl": "%(title).100s [%(id)s].%(ext)s",
@@ -69,15 +74,16 @@ def main(url: str, output: str | None) -> None:
             ydl_opts["outtmpl"] = str(output_path)
 
     try:
-        click.echo(f"Downloading from {url}...")
+        print(f"Downloading from {url}...")
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
             filename = ydl.prepare_filename(info)
-            click.secho(f"Success! Saved to: {filename}", fg="green")
+            print(f"[green]Success![/green] Saved to: {filename}")
 
     except Exception as e:
-        raise click.ClickException(f"Failed to download: {e}") from e
+        print(f"[bold red]Error:[/bold red] Failed to download: {e}")
+        raise typer.Exit(code=1)
 
 
 if __name__ == "__main__":
-    main()
+    typer.run(main)

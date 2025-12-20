@@ -3,7 +3,8 @@
 # requires-python = ">=3.12"
 # category = "data"
 # dependencies = [
-#     "click",
+#     "typer>=0.15.0",
+#     "rich>=13.0.0",
 #     "pyarrow",
 # ]
 # ///
@@ -16,11 +17,14 @@ import glob
 import os
 import sys
 from pathlib import Path
+from typing import Annotated
 
-import click
 import pyarrow as pa
 import pyarrow.ipc as ipc
 import pyarrow.parquet as pq
+import typer
+from rich import print
+from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, MofNCompleteColumn
 
 
 def find_arrow_files(source_dir: str) -> list[str]:
@@ -57,31 +61,41 @@ def convert_arrow_to_parquet(source_path: str, dest_path: str) -> None:
                 writer.close()
 
 
-@click.command()
-@click.option(
-    "--source-dir",
-    required=True,
-    help="Directory containing .arrow files",
-    type=click.Path(exists=True, file_okay=False, dir_okay=True, readable=True),
-)
-@click.option(
-    "--output-dir",
-    default="parq_convert",
-    help="Directory to write .parquet files",
-    type=click.Path(file_okay=False, dir_okay=True, writable=True),
-)
-@click.option(
-    "--overwrite",
-    is_flag=True,
-    help="Overwrite existing parquet files",
-)
-@click.option(
-    "--preserve-subdirs",
-    is_flag=True,
-    help="Preserve input subdirectory structure inside output dir",
-)
 def main(
-    source_dir: str, output_dir: str, overwrite: bool, preserve_subdirs: bool
+    source_dir: Annotated[
+        Path,
+        typer.Option(
+            "--source-dir",
+            help="Directory containing .arrow files",
+            exists=True,
+            file_okay=False,
+            dir_okay=True,
+            readable=True,
+            resolve_path=True,
+        ),
+    ],
+    output_dir: Annotated[
+        Path,
+        typer.Option(
+            "--output-dir",
+            help="Directory to write .parquet files",
+            file_okay=False,
+            dir_okay=True,
+            writable=True,
+            resolve_path=True,
+        ),
+    ] = Path("parq_convert"),
+    overwrite: Annotated[
+        bool,
+        typer.Option("--overwrite", help="Overwrite existing parquet files"),
+    ] = False,
+    preserve_subdirs: Annotated[
+        bool,
+        typer.Option(
+            "--preserve-subdirs",
+            help="Preserve input subdirectory structure inside output dir",
+        ),
+    ] = False,
 ) -> None:
     """
     Convert Arrow shards to Parquet.
@@ -92,66 +106,73 @@ def main(
     - Handles both Arrow IPC File and Stream formats (tries file, falls back to stream)
 
     Notes:
-    - Use `--preserve-subdirs` to mirror the input directory tree under the output dir.
-    - Use `--overwrite` to re-create files; otherwise existing outputs are skipped.
+    - Use --preserve-subdirs to mirror the input directory tree under the output dir.
+    - Use --overwrite to re-create files; otherwise existing outputs are skipped.
 
-    \b
     Arguments:
         SOURCE_DIR: Directory containing .arrow files.
         OUTPUT_DIR: Directory to write .parquet files.
 
     Examples:
 
-    \b
         uv run python/convert_arrow_to_parquet_streaming.py --source-dir ./arrow_data --output-dir ./parquet_data
+
         uv run python/convert_arrow_to_parquet_streaming.py --source-dir ./arrow_data --output-dir ./parquet_data --preserve-subdirs
     """
-    source_dir = os.path.abspath(os.path.expanduser(source_dir))
-    output_dir = os.path.abspath(os.path.expanduser(output_dir))
-    Path(output_dir).mkdir(parents=True, exist_ok=True)
+    source_dir_str = str(source_dir)
+    output_dir_str = str(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
 
-    arrow_files = find_arrow_files(source_dir)
+    arrow_files = find_arrow_files(source_dir_str)
     if not arrow_files:
-        click.echo(f"No .arrow files found under {source_dir}", err=True)
+        print(f"[red]No .arrow files found under {source_dir_str}[/red]", file=sys.stderr)
         sys.exit(1)
 
-    click.echo(f"Found {len(arrow_files)} .arrow files under {source_dir}")
+    print(f"Found {len(arrow_files)} .arrow files under {source_dir_str}")
 
     converted_count = 0
-    with click.progressbar(arrow_files, label="Converting files") as bar:
-        for arrow_path in bar:
+
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        MofNCompleteColumn(),
+    ) as progress:
+        task = progress.add_task("Converting files", total=len(arrow_files))
+
+        for arrow_path in arrow_files:
             arrow_path = os.path.abspath(arrow_path)
             if preserve_subdirs:
-                rel = os.path.relpath(arrow_path, source_dir)
+                rel = os.path.relpath(arrow_path, source_dir_str)
                 parquet_path = os.path.join(
-                    output_dir, os.path.splitext(rel)[0] + ".parquet"
+                    output_dir_str, os.path.splitext(rel)[0] + ".parquet"
                 )
             else:
                 parquet_name = (
                     os.path.splitext(os.path.basename(arrow_path))[0] + ".parquet"
                 )
-                parquet_path = os.path.join(output_dir, parquet_name)
+                parquet_path = os.path.join(output_dir_str, parquet_name)
 
             if os.path.exists(parquet_path) and not overwrite:
-                click.echo(f"Skip (exists): {parquet_path}")
+                print(f"[dim]Skip (exists): {parquet_path}[/dim]")
+                progress.advance(task)
                 continue
 
             try:
                 convert_arrow_to_parquet(arrow_path, parquet_path)
-                # We can't easily print per-file stats inside the progress bar without messing it up
-                # but we could verify if needed.
-                # pf = pq.ParquetFile(parquet_path)
                 converted_count += 1
             except Exception as exc:
-                click.echo(
-                    f"ERROR converting {arrow_path}: {exc}",
-                    err=True,
+                print(
+                    f"[red]ERROR converting {arrow_path}: {exc}[/red]",
+                    file=sys.stderr,
                 )
 
-    click.echo(
-        f"Done. Converted {converted_count}/{len(arrow_files)} files into {output_dir}"
+            progress.advance(task)
+
+    print(
+        f"Done. Converted {converted_count}/{len(arrow_files)} files into {output_dir_str}"
     )
 
 
 if __name__ == "__main__":
-    main()
+    typer.run(main)

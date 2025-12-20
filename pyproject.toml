@@ -26,8 +26,8 @@ strict_concatenate = true
 
 # Explicitly ban Any
 disallow_any_unimported = true
-disallow_any_expr = false  # Too strict, would break click decorators
-disallow_any_decorated = false  # Too strict for click
+disallow_any_expr = false  # Too strict, would break typer Annotated types
+disallow_any_decorated = false  # Too strict for typer
 disallow_any_explicit = true  # Ban explicit Any usage
 
 # Additional strictness

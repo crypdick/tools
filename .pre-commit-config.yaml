@@ -55,16 +55,16 @@ repos:
         exclude: ^(python/README\.md|bash/README\.md)
 
       # Custom repository standards
-      - id: check-no-argparse
-        name: check no argparse (use click)
-        entry: uv run --no-project python ci/check_no_argparse.py
+      - id: check-typer-cli
+        name: check typer CLI (no argparse/click)
+        entry: uv run --no-project python ci/check_typer_cli.py
         language: system
         types: [python]
         files: ^python/
 
-      - id: check-no-print
-        name: check no print() (use click.echo)
-        entry: uv run --no-project python ci/check_no_print.py
+      - id: check-rich-print
+        name: check 'from rich import print'
+        entry: uv run --no-project python ci/check_rich_print.py
         language: system
         types: [python]
         files: ^python/
