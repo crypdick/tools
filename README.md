@@ -95,63 +95,38 @@ Options:
 </details>
 
 <details>
-<summary><strong>🎬 Media</strong> (2 tools)</summary>
+<summary><strong>🛠️ Dev</strong> (1 tool)</summary>
 
 <details>
-<summary><a href="python/download_video.py"><code>download_video.py</code></a></summary>
+<summary><a href="python/ipynb_to_py_sphinx.py"><code>ipynb_to_py_sphinx.py</code></a></summary>
 
-Output of <code>uv run https://tools.ricardodecal.com/python/download_video.py --help</code>:
+Output of <code>uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py --help</code>:
 
-<pre><code>Usage: download_video.py [OPTIONS] URL
+<pre><code>Usage: ipynb_to_py_sphinx.py [OPTIONS] NOTEBOOK
 
-  Download a video from a supported platform (Twitter/X, YouTube, etc.).
+  Convert a Jupyter notebook to a Sphinx Gallery Python script.
 
-  Uses yt-dlp to download videos from a wide variety of websites. Twitter
-  "GIFs" are actually MP4 videos, which this tool can also download.
+  This tool converts a .ipynb file to a .py file formatted for Sphinx Gallery.
+  It converts Markdown cells to RST (using pypandoc) and comments them out,
+  while preserving code cells. It also handles magic commands by commenting
+  them out.
 
-  Arguments:
+  Based on: https://gist.github.com/chsasank/7218ca16f8d022e02a9c0deb94a310fe
 
-      URL: The URL of the video page (e.g., Twitter post, YouTube video).
+  Arguments:     NOTEBOOK: The path to the input Jupyter notebook (.ipynb).
 
   Examples:
 
-      uv run https://tools.ricardodecal.com/python/download_video.py
-      https://x.com/SemiAnalysis_/status/1990449859321888935
+      uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py
+      notebook.ipynb
 
-      uv run https://tools.ricardodecal.com/python/download_video.py
-      https://www.youtube.com/watch?v=dQw4w9WgXcQ --output my_video.mp4
+      uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py
+      notebook.ipynb --output my_gallery_script.py
 
 Options:
-  -o, --output PATH  Output filepath (optional). Can be a file path or a
-                     directory path. Defaults to 'Title [ID].mp4' in current
-                     directory.
+  -o, --output PATH  Output Python file path. Defaults to notebook name with
+                     .py extension.
   --help             Show this message and exit.
-</code></pre>
-
-</details>
-
-<details>
-<summary><a href="python/yt_transcript.py"><code>yt_transcript.py</code></a></summary>
-
-Output of <code>uv run https://tools.ricardodecal.com/python/yt_transcript.py --help</code>:
-
-<pre><code>Usage: yt_transcript.py [OPTIONS] URL [OUTPUT_FILE]
-
-  Download transcripts from a YouTube URL (video or playlist) to a single
-  file.
-
-  Arguments:
-      URL: YouTube video or playlist URL.
-      OUTPUT_FILE: Path to save the transcript text. Defaults to transcript.txt.
-
-  Examples:
-
-      uv run https://tools.ricardodecal.com/python/yt_transcript.py "https://youtu.be/..."
-      uv run https://tools.ricardodecal.com/python/yt_transcript.py "https://youtube.com/playlist?list=..." out.txt
-
-Options:
-  -l, --lang TEXT  Language codes to prefer (e.g. -l en -l fr)
-  --help           Show this message and exit.
 </code></pre>
 
 </details>
@@ -224,38 +199,63 @@ Options:
 </details>
 
 <details>
-<summary><strong>🛠️ Dev</strong> (1 tool)</summary>
+<summary><strong>🎬 Media</strong> (2 tools)</summary>
 
 <details>
-<summary><a href="python/ipynb_to_py_sphinx.py"><code>ipynb_to_py_sphinx.py</code></a></summary>
+<summary><a href="python/download_video.py"><code>download_video.py</code></a></summary>
 
-Output of <code>uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py --help</code>:
+Output of <code>uv run https://tools.ricardodecal.com/python/download_video.py --help</code>:
 
-<pre><code>Usage: ipynb_to_py_sphinx.py [OPTIONS] NOTEBOOK
+<pre><code>Usage: download_video.py [OPTIONS] URL
 
-  Convert a Jupyter notebook to a Sphinx Gallery Python script.
+  Download a video from a supported platform (Twitter/X, YouTube, etc.).
 
-  This tool converts a .ipynb file to a .py file formatted for Sphinx Gallery.
-  It converts Markdown cells to RST (using pypandoc) and comments them out,
-  while preserving code cells. It also handles magic commands by commenting
-  them out.
+  Uses yt-dlp to download videos from a wide variety of websites. Twitter
+  "GIFs" are actually MP4 videos, which this tool can also download.
 
-  Based on: https://gist.github.com/chsasank/7218ca16f8d022e02a9c0deb94a310fe
+  Arguments:
 
-  Arguments:     NOTEBOOK: The path to the input Jupyter notebook (.ipynb).
+      URL: The URL of the video page (e.g., Twitter post, YouTube video).
 
   Examples:
 
-      uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py
-      notebook.ipynb
+      uv run https://tools.ricardodecal.com/python/download_video.py
+      https://x.com/SemiAnalysis_/status/1990449859321888935
 
-      uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py
-      notebook.ipynb --output my_gallery_script.py
+      uv run https://tools.ricardodecal.com/python/download_video.py
+      https://www.youtube.com/watch?v=dQw4w9WgXcQ --output my_video.mp4
 
 Options:
-  -o, --output PATH  Output Python file path. Defaults to notebook name with
-                     .py extension.
+  -o, --output PATH  Output filepath (optional). Can be a file path or a
+                     directory path. Defaults to 'Title [ID].mp4' in current
+                     directory.
   --help             Show this message and exit.
+</code></pre>
+
+</details>
+
+<details>
+<summary><a href="python/yt_transcript.py"><code>yt_transcript.py</code></a></summary>
+
+Output of <code>uv run https://tools.ricardodecal.com/python/yt_transcript.py --help</code>:
+
+<pre><code>Usage: yt_transcript.py [OPTIONS] URL [OUTPUT_FILE]
+
+  Download transcripts from a YouTube URL (video or playlist) to a single
+  file.
+
+  Arguments:
+      URL: YouTube video or playlist URL.
+      OUTPUT_FILE: Path to save the transcript text. Defaults to transcript.txt.
+
+  Examples:
+
+      uv run https://tools.ricardodecal.com/python/yt_transcript.py "https://youtu.be/..."
+      uv run https://tools.ricardodecal.com/python/yt_transcript.py "https://youtube.com/playlist?list=..." out.txt
+
+Options:
+  -l, --lang TEXT  Language codes to prefer (e.g. -l en -l fr)
+  --help           Show this message and exit.
 </code></pre>
 
 </details>
