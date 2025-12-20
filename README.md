@@ -171,13 +171,10 @@ Options:
 
 </details>
 
-<details open>
-<summary><a href="html/html_to_text.html"><code>html_to_text.html</code></a> <kbd>page</kbd></summary>
-
-<a href="https://tools.ricardodecal.com/html/html_to_text.html">https://tools.ricardodecal.com/html/html_to_text.html</a><br>
-Paste HTML and extract readable plain text. Runs entirely in your browser.
-
-</details>
+<div class="page">
+<p><a href="html/html_to_text.html"><code>html_to_text.html</code></a> <kbd>page</kbd></p>
+<p><a href="https://tools.ricardodecal.com/html/html_to_text.html">https://tools.ricardodecal.com/html/html_to_text.html</a><br>Paste HTML and extract readable plain text. Runs entirely in your browser.</p>
+</div>
 
 <details>
 <summary><a href="python/html_to_text.py"><code>html_to_text.py</code></a> <kbd>script</kbd></summary>
@@ -215,13 +212,10 @@ Options:
 
 </details>
 
-<details open>
-<summary><a href="html/strip_pdf_metadata.html"><code>strip_pdf_metadata.html</code></a> <kbd>page</kbd></summary>
-
-<a href="https://tools.ricardodecal.com/html/strip_pdf_metadata.html">https://tools.ricardodecal.com/html/strip_pdf_metadata.html</a><br>
-Remove author, title, timestamps, and other metadata from PDF files. Runs entirely in your browser — files never leave your device.
-
-</details>
+<div class="page">
+<p><a href="html/strip_pdf_metadata.html"><code>strip_pdf_metadata.html</code></a> <kbd>page</kbd></p>
+<p><a href="https://tools.ricardodecal.com/html/strip_pdf_metadata.html">https://tools.ricardodecal.com/html/strip_pdf_metadata.html</a><br>Remove author, title, timestamps, and other metadata from PDF files. Runs entirely in your browser — files never leave your device.</p>
+</div>
 
 <details>
 <summary><a href="python/strip_pdf_metadata.py"><code>strip_pdf_metadata.py</code></a> <kbd>script</kbd></summary>
