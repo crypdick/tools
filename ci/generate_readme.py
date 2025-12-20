@@ -22,13 +22,13 @@ DOMAIN = "tools.ricardodecal.com"
 START_MARKER = "<!-- TOOLS_START -->"
 END_MARKER = "<!-- TOOLS_END -->"
 
-# Category display order and titles
-CATEGORY_ORDER = ["data", "media", "files", "dev"]
+# Category display order and titles (alphabetical)
+CATEGORY_ORDER = ["data", "dev", "files", "media"]
 CATEGORY_TITLES = {
     "data": "📊 Data",
-    "media": "🎬 Media",
-    "files": "📁 Files",
     "dev": "🛠️ Dev",
+    "files": "📁 Files",
+    "media": "🎬 Media",
 }
 
 
