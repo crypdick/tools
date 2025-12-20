@@ -22,7 +22,7 @@ Inspired by [Simon Willison's tools collection](https://github.com/simonw/tools)
 <summary><strong>📊 Data Processing</strong> (7 scripts, 2 pages)</summary>
 
 <details>
-<summary><a href="python/convert_arrow_to_parquet_streaming.py"><code>convert_arrow_to_parquet_streaming.py</code></a> <kbd>script</kbd></summary>
+<summary><a href="python/convert_arrow_to_parquet_streaming.py"><code>convert_arrow_to_parquet_streaming.py</code></a> <kbd>python</kbd></summary>
 
 Output of <code>uv run https://tools.ricardodecal.com/python/convert_arrow_to_parquet_streaming.py --help</code>:
 
@@ -60,7 +60,7 @@ Options:
 </details>
 
 <details>
-<summary><a href="python/count_parquet_rows.py"><code>count_parquet_rows.py</code></a> <kbd>script</kbd></summary>
+<summary><a href="python/count_parquet_rows.py"><code>count_parquet_rows.py</code></a> <kbd>python</kbd></summary>
 
 Output of <code>uv run https://tools.ricardodecal.com/python/count_parquet_rows.py --help</code>:
 
@@ -96,7 +96,7 @@ Options:
 </details>
 
 <details>
-<summary><a href="python/dedup_dirs.py"><code>dedup_dirs.py</code></a> <kbd>script</kbd></summary>
+<summary><a href="python/dedup_dirs.py"><code>dedup_dirs.py</code></a> <kbd>python</kbd></summary>
 
 Output of <code>uv run https://tools.ricardodecal.com/python/dedup_dirs.py --help</code>:
 
@@ -139,7 +139,7 @@ Options:
 </details>
 
 <details>
-<summary><a href="python/download_video.py"><code>download_video.py</code></a> <kbd>script</kbd></summary>
+<summary><a href="python/download_video.py"><code>download_video.py</code></a> <kbd>python</kbd></summary>
 
 Output of <code>uv run https://tools.ricardodecal.com/python/download_video.py --help</code>:
 
@@ -177,7 +177,7 @@ Options:
 </div>
 
 <details>
-<summary><a href="python/html_to_text.py"><code>html_to_text.py</code></a> <kbd>script</kbd></summary>
+<summary><a href="python/html_to_text.py"><code>html_to_text.py</code></a> <kbd>python</kbd></summary>
 
 Output of <code>uv run https://tools.ricardodecal.com/python/html_to_text.py --help</code>:
 
@@ -218,7 +218,7 @@ Options:
 </div>
 
 <details>
-<summary><a href="python/strip_pdf_metadata.py"><code>strip_pdf_metadata.py</code></a> <kbd>script</kbd></summary>
+<summary><a href="python/strip_pdf_metadata.py"><code>strip_pdf_metadata.py</code></a> <kbd>python</kbd></summary>
 
 Output of <code>uv run https://tools.ricardodecal.com/python/strip_pdf_metadata.py --help</code>:
 
@@ -235,7 +235,7 @@ Options:
 </details>
 
 <details>
-<summary><a href="python/yt_transcript.py"><code>yt_transcript.py</code></a> <kbd>script</kbd></summary>
+<summary><a href="python/yt_transcript.py"><code>yt_transcript.py</code></a> <kbd>python</kbd></summary>
 
 Output of <code>uv run https://tools.ricardodecal.com/python/yt_transcript.py --help</code>:
 
@@ -266,7 +266,7 @@ Options:
 <summary><strong>🛠️ Development</strong> (2 scripts)</summary>
 
 <details>
-<summary><a href="python/burn_iso.py"><code>burn_iso.py</code></a> <kbd>script</kbd></summary>
+<summary><a href="python/burn_iso.py"><code>burn_iso.py</code></a> <kbd>python</kbd></summary>
 
 Output of <code>uv run https://tools.ricardodecal.com/python/burn_iso.py --help</code>:
 
@@ -305,7 +305,7 @@ Options:
 </details>
 
 <details>
-<summary><a href="python/ipynb_to_py_sphinx.py"><code>ipynb_to_py_sphinx.py</code></a> <kbd>script</kbd></summary>
+<summary><a href="python/ipynb_to_py_sphinx.py"><code>ipynb_to_py_sphinx.py</code></a> <kbd>python</kbd></summary>
 
 Output of <code>uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py --help</code>:
 
