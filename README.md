@@ -83,6 +83,47 @@ Options:
   --help  Show this message and exit.
 ```
 
+### [dedup_dirs.py](python/dedup_dirs.py)
+
+Output of `uv run https://tools.ricardodecal.com/python/dedup_dirs.py --help`:
+
+```text
+Usage: dedup_dirs.py [OPTIONS] OLD_DIR NEW_DIR
+
+  Find duplicate files between OLD_DIR and NEW_DIR, optionally deleting from
+  OLD_DIR.
+
+  Compares files by path and content. For large files (>10MB), uses sampling
+  for speed. For smaller files, compares MD5 hashes. Runs in parallel for
+  performance on large directory trees.
+
+  Without --delete, runs in dry-run mode showing what would be deleted. With
+  --delete, removes identical files from OLD_DIR and cleans up empty
+  directories.
+
+  Arguments:     OLD_DIR: Source directory to deduplicate (files deleted from
+  here).     NEW_DIR: Reference directory to compare against (untouched).
+
+  Examples:
+
+      # Dry run - see what would be deleted     uv run
+      https://tools.ricardodecal.com/python/dedup_dirs.py ~/old-backup ~/new-
+      backup
+
+      # Actually delete duplicates     uv run
+      https://tools.ricardodecal.com/python/dedup_dirs.py ~/old-backup ~/new-
+      backup --delete
+
+      # Use more workers for faster processing     uv run
+      https://tools.ricardodecal.com/python/dedup_dirs.py ~/old ~/new --delete
+      -w 16
+
+Options:
+  --delete               Actually delete identical files (default is dry run).
+  -w, --workers INTEGER  Number of parallel workers.
+  --help                 Show this message and exit.
+```
+
 ### [download_video.py](python/download_video.py)
 
 Output of `uv run https://tools.ricardodecal.com/python/download_video.py --help`:
