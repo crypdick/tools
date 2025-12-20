@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # /// script
 # requires-python = ">=3.12"
+# category = "media"
 # dependencies = [
 #     "click>=8.1.0",
 #     "yt-dlp",

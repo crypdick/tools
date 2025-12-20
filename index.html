@@ -11,6 +11,8 @@
             --link: #0969da;
             --border: #d0d7de;
             --code-bg: #f6f8fa;
+            --category-bg: #f6f8fa;
+            --tool-bg: #ffffff;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -20,6 +22,8 @@
                 --link: #58a6ff;
                 --border: #30363d;
                 --code-bg: #161b22;
+                --category-bg: #161b22;
+                --tool-bg: #0d1117;
             }
         }
 
@@ -146,7 +150,105 @@
             margin-top: 3rem;
         }
 
-        details {
+        /* Category-level details (outer) */
+        details.category {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin: 1rem 0;
+            background: var(--category-bg);
+        }
+
+        details.category[open] {
+            padding-bottom: 1rem;
+        }
+
+        details.category > summary {
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.2rem;
+            user-select: none;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        details.category > summary::-webkit-details-marker {
+            display: none;
+        }
+
+        details.category > summary::before {
+            content: '▶';
+            display: inline-block;
+            transition: transform 0.2s;
+            font-size: 0.8em;
+        }
+
+        details.category[open] > summary::before {
+            transform: rotate(90deg);
+        }
+
+        details.category > summary:hover {
+            color: var(--link);
+        }
+
+        /* Tool-level details (nested inside category) */
+        details.tool {
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.5rem 0.75rem;
+            margin: 0.5rem 0;
+            margin-left: 1.5rem;
+            background: var(--tool-bg);
+        }
+
+        details.tool[open] {
+            padding-bottom: 0.75rem;
+        }
+
+        details.tool > summary {
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1rem;
+            user-select: none;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        details.tool > summary::-webkit-details-marker {
+            display: none;
+        }
+
+        details.tool > summary::before {
+            content: '▸';
+            display: inline-block;
+            transition: transform 0.2s;
+            font-size: 0.7em;
+        }
+
+        details.tool[open] > summary::before {
+            transform: rotate(90deg);
+        }
+
+        details.tool > summary:hover {
+            color: var(--link);
+        }
+
+        details.tool .content {
+            margin-top: 0.75rem;
+            padding-left: 1rem;
+        }
+
+        details.tool pre {
+            margin: 0.5rem 0;
+            font-size: 0.85em;
+        }
+
+        /* Fallback for any details without a class */
+        details:not(.category):not(.tool) {
             border: 1px solid var(--border);
             border-radius: 6px;
             padding: 0.75rem 1rem;
@@ -154,11 +256,11 @@
             background: var(--code-bg);
         }
 
-        details[open] {
+        details:not(.category):not(.tool)[open] {
             padding-bottom: 1rem;
         }
 
-        summary {
+        details:not(.category):not(.tool) > summary {
             cursor: pointer;
             font-weight: 600;
             font-size: 1.1rem;
@@ -169,26 +271,26 @@
             gap: 0.5rem;
         }
 
-        summary::-webkit-details-marker {
+        details:not(.category):not(.tool) > summary::-webkit-details-marker {
             display: none;
         }
 
-        summary::before {
+        details:not(.category):not(.tool) > summary::before {
             content: '▶';
             display: inline-block;
             transition: transform 0.2s;
             font-size: 0.8em;
         }
 
-        details[open] summary::before {
+        details:not(.category):not(.tool)[open] > summary::before {
             transform: rotate(90deg);
         }
 
-        summary:hover {
+        details:not(.category):not(.tool) > summary:hover {
             color: var(--link);
         }
 
-        details .content {
+        details:not(.category):not(.tool) .content {
             margin-top: 1rem;
             padding-left: 1.3rem;
         }
@@ -232,10 +334,15 @@
 <p>This is an experiment in low-stakes vibe coding. The code lives in <a href="https://github.com/crypdick/tools"><code>crypdick/tools</code></a>.</p>
 <p>Inspired by <a href="https://github.com/simonw/tools">Simon Willison's tools collection</a>.</p>
 <h2>Available Tools</h2>
-<details>
-<summary>convert_arrow_to_parquet_streaming.py</summary>
+<details class="category">
+<summary><strong>📊 Data</strong> (2 tools)</summary>
+
+<details class="tool">
+<summary><a href="python/convert_arrow_to_parquet_streaming.py"><code>convert_arrow_to_parquet_streaming.py</code></a></summary>
 <div class="content">
-<p>Output of <code>uv run https://tools.ricardodecal.com/python/convert_arrow_to_parquet_streaming.py --help</code>:</p>
+Output of `uv run https://tools.ricardodecal.com/python/convert_arrow_to_parquet_streaming.py --help`:
+
+
 <pre><code class="language-text">Usage: convert_arrow_to_parquet_streaming.py [OPTIONS]
 
   Convert Arrow shards to Parquet.
@@ -268,10 +375,13 @@ Options:
 </code></pre>
 </div>
 </details>
-<details>
-<summary>count_parquet_rows.py</summary>
+
+<details class="tool">
+<summary><a href="python/count_parquet_rows.py"><code>count_parquet_rows.py</code></a></summary>
 <div class="content">
-<p>Output of <code>uv run https://tools.ricardodecal.com/python/count_parquet_rows.py --help</code>:</p>
+Output of `uv run https://tools.ricardodecal.com/python/count_parquet_rows.py --help`:
+
+
 <pre><code class="language-text">Usage: count_parquet_rows.py [OPTIONS] DATASET_PATH
 
   Count the number of rows in a parquet file/dataset without reading data into
@@ -302,10 +412,84 @@ Options:
 </code></pre>
 </div>
 </details>
-<details>
-<summary>dedup_dirs.py</summary>
+
+</details>
+
+<details class="category">
+<summary><strong>🎬 Media</strong> (2 tools)</summary>
+
+<details class="tool">
+<summary><a href="python/download_video.py"><code>download_video.py</code></a></summary>
 <div class="content">
-<p>Output of <code>uv run https://tools.ricardodecal.com/python/dedup_dirs.py --help</code>:</p>
+Output of `uv run https://tools.ricardodecal.com/python/download_video.py --help`:
+
+
+<pre><code class="language-text">Usage: download_video.py [OPTIONS] URL
+
+  Download a video from a supported platform (Twitter/X, YouTube, etc.).
+
+  Uses yt-dlp to download videos from a wide variety of websites. Twitter
+  &quot;GIFs&quot; are actually MP4 videos, which this tool can also download.
+
+  Arguments:
+
+      URL: The URL of the video page (e.g., Twitter post, YouTube video).
+
+  Examples:
+
+      uv run https://tools.ricardodecal.com/python/download_video.py
+      https://x.com/SemiAnalysis_/status/1990449859321888935
+
+      uv run https://tools.ricardodecal.com/python/download_video.py
+      https://www.youtube.com/watch?v=dQw4w9WgXcQ --output my_video.mp4
+
+Options:
+  -o, --output PATH  Output filepath (optional). Can be a file path or a
+                     directory path. Defaults to 'Title [ID].mp4' in current
+                     directory.
+  --help             Show this message and exit.
+</code></pre>
+</div>
+</details>
+
+<details class="tool">
+<summary><a href="python/yt_transcript.py"><code>yt_transcript.py</code></a></summary>
+<div class="content">
+Output of `uv run https://tools.ricardodecal.com/python/yt_transcript.py --help`:
+
+
+<pre><code class="language-text">Usage: yt_transcript.py [OPTIONS] URL [OUTPUT_FILE]
+
+  Download transcripts from a YouTube URL (video or playlist) to a single
+  file.
+
+  Arguments:
+      URL: YouTube video or playlist URL.
+      OUTPUT_FILE: Path to save the transcript text. Defaults to transcript.txt.
+
+  Examples:
+
+      uv run https://tools.ricardodecal.com/python/yt_transcript.py &quot;https://youtu.be/...&quot;
+      uv run https://tools.ricardodecal.com/python/yt_transcript.py &quot;https://youtube.com/playlist?list=...&quot; out.txt
+
+Options:
+  -l, --lang TEXT  Language codes to prefer (e.g. -l en -l fr)
+  --help           Show this message and exit.
+</code></pre>
+</div>
+</details>
+
+</details>
+
+<details class="category">
+<summary><strong>📁 Files</strong> (2 tools)</summary>
+
+<details class="tool">
+<summary><a href="python/dedup_dirs.py"><code>dedup_dirs.py</code></a></summary>
+<div class="content">
+Output of `uv run https://tools.ricardodecal.com/python/dedup_dirs.py --help`:
+
+
 <pre><code class="language-text">Usage: dedup_dirs.py [OPTIONS] OLD_DIR NEW_DIR
 
   Find duplicate files between OLD_DIR and NEW_DIR, optionally deleting from
@@ -343,41 +527,36 @@ Options:
 </code></pre>
 </div>
 </details>
-<details>
-<summary>download_video.py</summary>
+
+<details class="tool">
+<summary><a href="python/strip_pdf_metadata.py"><code>strip_pdf_metadata.py</code></a></summary>
 <div class="content">
-<p>Output of <code>uv run https://tools.ricardodecal.com/python/download_video.py --help</code>:</p>
-<pre><code class="language-text">Usage: download_video.py [OPTIONS] URL
+Output of `uv run https://tools.ricardodecal.com/python/strip_pdf_metadata.py --help`:
 
-  Download a video from a supported platform (Twitter/X, YouTube, etc.).
 
-  Uses yt-dlp to download videos from a wide variety of websites. Twitter
-  &quot;GIFs&quot; are actually MP4 videos, which this tool can also download.
+<pre><code class="language-text">Usage: strip_pdf_metadata.py [OPTIONS] INPUT_FILE [OUTPUT_FILE]
 
-  Arguments:
+  Strip metadata from a PDF file.
 
-      URL: The URL of the video page (e.g., Twitter post, YouTube video).
-
-  Examples:
-
-      uv run https://tools.ricardodecal.com/python/download_video.py
-      https://x.com/SemiAnalysis_/status/1990449859321888935
-
-      uv run https://tools.ricardodecal.com/python/download_video.py
-      https://www.youtube.com/watch?v=dQw4w9WgXcQ --output my_video.mp4
+  If OUTPUT_FILE is not provided, writes to 'stripped_&lt;INPUT_FILE&gt;'.
 
 Options:
-  -o, --output PATH  Output filepath (optional). Can be a file path or a
-                     directory path. Defaults to 'Title [ID].mp4' in current
-                     directory.
-  --help             Show this message and exit.
+  --help  Show this message and exit.
 </code></pre>
 </div>
 </details>
-<details>
-<summary>ipynb_to_py_sphinx.py</summary>
+
+</details>
+
+<details class="category">
+<summary><strong>🛠️ Dev</strong> (1 tool)</summary>
+
+<details class="tool">
+<summary><a href="python/ipynb_to_py_sphinx.py"><code>ipynb_to_py_sphinx.py</code></a></summary>
 <div class="content">
-<p>Output of <code>uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py --help</code>:</p>
+Output of `uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py --help`:
+
+
 <pre><code class="language-text">Usage: ipynb_to_py_sphinx.py [OPTIONS] NOTEBOOK
 
   Convert a Jupyter notebook to a Sphinx Gallery Python script.
@@ -406,46 +585,8 @@ Options:
 </code></pre>
 </div>
 </details>
-<details>
-<summary>strip_pdf_metadata.py</summary>
-<div class="content">
-<p>Output of <code>uv run https://tools.ricardodecal.com/python/strip_pdf_metadata.py --help</code>:</p>
-<pre><code class="language-text">Usage: strip_pdf_metadata.py [OPTIONS] INPUT_FILE [OUTPUT_FILE]
 
-  Strip metadata from a PDF file.
-
-  If OUTPUT_FILE is not provided, writes to 'stripped_&lt;INPUT_FILE&gt;'.
-
-Options:
-  --help  Show this message and exit.
-</code></pre>
-</div>
 </details>
-<details>
-<summary>yt_transcript.py</summary>
-<div class="content">
-<p>Output of <code>uv run https://tools.ricardodecal.com/python/yt_transcript.py --help</code>:</p>
-<pre><code class="language-text">Usage: yt_transcript.py [OPTIONS] URL [OUTPUT_FILE]
-
-  Download transcripts from a YouTube URL (video or playlist) to a single
-  file.
-
-  Arguments:
-      URL: YouTube video or playlist URL.
-      OUTPUT_FILE: Path to save the transcript text. Defaults to transcript.txt.
-
-  Examples:
-
-      uv run https://tools.ricardodecal.com/python/yt_transcript.py &quot;https://youtu.be/...&quot;
-      uv run https://tools.ricardodecal.com/python/yt_transcript.py &quot;https://youtube.com/playlist?list=...&quot; out.txt
-
-Options:
-  -l, --lang TEXT  Language codes to prefer (e.g. -l en -l fr)
-  --help           Show this message and exit.
-</code></pre>
-</div>
-</details>
-
 
         <footer>
             <p>Made by Ricardo Decal • Updated December 19, 2025</p>

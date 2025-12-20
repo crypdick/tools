@@ -9,6 +9,7 @@ Generate README.md from tool --help output.
 
 import re
 import subprocess
+from collections import defaultdict
 from pathlib import Path
 from typing import NamedTuple
 
@@ -21,11 +22,40 @@ DOMAIN = "tools.ricardodecal.com"
 START_MARKER = "<!-- TOOLS_START -->"
 END_MARKER = "<!-- TOOLS_END -->"
 
+# Category display order and titles
+CATEGORY_ORDER = ["data", "media", "files", "dev"]
+CATEGORY_TITLES = {
+    "data": "📊 Data",
+    "media": "🎬 Media",
+    "files": "📁 Files",
+    "dev": "🛠️ Dev",
+}
+
 
 class ToolInfo(NamedTuple):
     name: str
     filename: str
     help_output: str
+    category: str
+
+
+def extract_category(path: Path) -> str:
+    """Extract category from PEP 723 script block."""
+    content = path.read_text(encoding="utf-8")
+
+    # Find the script block
+    script_block_match = re.search(r"# /// script\s*\n(.*?)# ///", content, re.DOTALL)
+    if not script_block_match:
+        return "uncategorized"
+
+    block = script_block_match.group(1)
+
+    # Look for category = "..."
+    category_match = re.search(r'#\s*category\s*=\s*"([^"]+)"', block)
+    if category_match:
+        return category_match.group(1)
+
+    return "uncategorized"
 
 
 def get_tool_help(path: Path) -> str:
@@ -47,13 +77,15 @@ def get_tool_help(path: Path) -> str:
         raise
 
 
-def extract_tool_info(path: Path) -> ToolInfo | None:
+def extract_tool_info(path: Path) -> ToolInfo:
     help_output = get_tool_help(path)
+    category = extract_category(path)
 
     return ToolInfo(
         name=path.name,
         filename=path.name,
         help_output=help_output,
+        category=category,
     )
 
 
@@ -72,15 +104,33 @@ def format_tool_readme(info: ToolInfo) -> str:
     doc = pattern.sub(replacement, doc)
     doc = raw_pattern.sub(replacement, doc)
 
-    # Format as list item with filename linking to file
-    # Then the help output in a text block
-    output = f"### [{info.filename}](python/{info.filename})\n\n"
-    output += f"Output of `uv run https://{DOMAIN}/python/{info.filename} --help`:\n\n"
-    output += "```text\n"
-    output += f"{doc}"
-    output += "```\n"
+    # Format as nested details element
+    output = f"""<details>
+<summary><a href="python/{info.filename}"><code>{info.filename}</code></a></summary>
 
+Output of `uv run https://{DOMAIN}/python/{info.filename} --help`:
+
+```text
+{doc}```
+
+</details>
+"""
     return output
+
+
+def format_category_section(category: str, tools: list[ToolInfo]) -> str:
+    """Format a category with its tools as nested details."""
+    title = CATEGORY_TITLES.get(category, category.title())
+    tool_count = len(tools)
+
+    tools_content = "\n".join(format_tool_readme(tool) for tool in tools)
+
+    return f"""<details>
+<summary><strong>{title}</strong> ({tool_count} tool{"s" if tool_count != 1 else ""})</summary>
+
+{tools_content}
+</details>
+"""
 
 
 def generate_readme() -> None:
@@ -97,7 +147,8 @@ def generate_readme() -> None:
         return
 
     # Process Python Tools
-    tools_md = []
+    tools_by_category: dict[str, list[ToolInfo]] = defaultdict(list)
+
     if PYTHON_DIR.exists():
         for path in sorted(PYTHON_DIR.glob("*.py")):
             if path.name == "__init__.py":
@@ -105,9 +156,22 @@ def generate_readme() -> None:
 
             print(f"Processing {path.name}...")
             info = extract_tool_info(path)
-            tools_md.append(format_tool_readme(info))
+            tools_by_category[info.category].append(info)
 
-    tools_content = "\n".join(tools_md)
+    # Generate content by category in order
+    category_sections = []
+    for category in CATEGORY_ORDER:
+        if category in tools_by_category:
+            section = format_category_section(category, tools_by_category[category])
+            category_sections.append(section)
+
+    # Add any uncategorized tools at the end
+    for category in sorted(tools_by_category.keys()):
+        if category not in CATEGORY_ORDER:
+            section = format_category_section(category, tools_by_category[category])
+            category_sections.append(section)
+
+    tools_content = "\n".join(category_sections)
 
     # Replace content between markers
     start_idx = content.find(START_MARKER)
@@ -120,10 +184,11 @@ def generate_readme() -> None:
         return
 
     new_content = (
-        content[:start_idx]
+        content[: start_idx + len(START_MARKER)]
+        + "\n\n"
         + tools_content
         + "\n"
-        + content[end_idx + len(END_MARKER) :]
+        + content[end_idx:]
     )
 
     # Check if README exists

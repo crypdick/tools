@@ -13,7 +13,13 @@ Inspired by [Simon Willison's tools collection](https://github.com/simonw/tools)
 
 ## Available Tools
 
-### [convert_arrow_to_parquet_streaming.py](python/convert_arrow_to_parquet_streaming.py)
+<!-- TOOLS_START -->
+
+<details>
+<summary><strong>📊 Data</strong> (2 tools)</summary>
+
+<details>
+<summary><a href="python/convert_arrow_to_parquet_streaming.py"><code>convert_arrow_to_parquet_streaming.py</code></a></summary>
 
 Output of `uv run https://tools.ricardodecal.com/python/convert_arrow_to_parquet_streaming.py --help`:
 
@@ -49,7 +55,10 @@ Options:
   --help                  Show this message and exit.
 ```
 
-### [count_parquet_rows.py](python/count_parquet_rows.py)
+</details>
+
+<details>
+<summary><a href="python/count_parquet_rows.py"><code>count_parquet_rows.py</code></a></summary>
 
 Output of `uv run https://tools.ricardodecal.com/python/count_parquet_rows.py --help`:
 
@@ -83,7 +92,81 @@ Options:
   --help  Show this message and exit.
 ```
 
-### [dedup_dirs.py](python/dedup_dirs.py)
+</details>
+
+</details>
+
+<details>
+<summary><strong>🎬 Media</strong> (2 tools)</summary>
+
+<details>
+<summary><a href="python/download_video.py"><code>download_video.py</code></a></summary>
+
+Output of `uv run https://tools.ricardodecal.com/python/download_video.py --help`:
+
+```text
+Usage: download_video.py [OPTIONS] URL
+
+  Download a video from a supported platform (Twitter/X, YouTube, etc.).
+
+  Uses yt-dlp to download videos from a wide variety of websites. Twitter
+  "GIFs" are actually MP4 videos, which this tool can also download.
+
+  Arguments:
+
+      URL: The URL of the video page (e.g., Twitter post, YouTube video).
+
+  Examples:
+
+      uv run https://tools.ricardodecal.com/python/download_video.py
+      https://x.com/SemiAnalysis_/status/1990449859321888935
+
+      uv run https://tools.ricardodecal.com/python/download_video.py
+      https://www.youtube.com/watch?v=dQw4w9WgXcQ --output my_video.mp4
+
+Options:
+  -o, --output PATH  Output filepath (optional). Can be a file path or a
+                     directory path. Defaults to 'Title [ID].mp4' in current
+                     directory.
+  --help             Show this message and exit.
+```
+
+</details>
+
+<details>
+<summary><a href="python/yt_transcript.py"><code>yt_transcript.py</code></a></summary>
+
+Output of `uv run https://tools.ricardodecal.com/python/yt_transcript.py --help`:
+
+```text
+Usage: yt_transcript.py [OPTIONS] URL [OUTPUT_FILE]
+
+  Download transcripts from a YouTube URL (video or playlist) to a single
+  file.
+
+  Arguments:
+      URL: YouTube video or playlist URL.
+      OUTPUT_FILE: Path to save the transcript text. Defaults to transcript.txt.
+
+  Examples:
+
+      uv run https://tools.ricardodecal.com/python/yt_transcript.py "https://youtu.be/..."
+      uv run https://tools.ricardodecal.com/python/yt_transcript.py "https://youtube.com/playlist?list=..." out.txt
+
+Options:
+  -l, --lang TEXT  Language codes to prefer (e.g. -l en -l fr)
+  --help           Show this message and exit.
+```
+
+</details>
+
+</details>
+
+<details>
+<summary><strong>📁 Files</strong> (2 tools)</summary>
+
+<details>
+<summary><a href="python/dedup_dirs.py"><code>dedup_dirs.py</code></a></summary>
 
 Output of `uv run https://tools.ricardodecal.com/python/dedup_dirs.py --help`:
 
@@ -124,38 +207,33 @@ Options:
   --help                 Show this message and exit.
 ```
 
-### [download_video.py](python/download_video.py)
+</details>
 
-Output of `uv run https://tools.ricardodecal.com/python/download_video.py --help`:
+<details>
+<summary><a href="python/strip_pdf_metadata.py"><code>strip_pdf_metadata.py</code></a></summary>
+
+Output of `uv run https://tools.ricardodecal.com/python/strip_pdf_metadata.py --help`:
 
 ```text
-Usage: download_video.py [OPTIONS] URL
+Usage: strip_pdf_metadata.py [OPTIONS] INPUT_FILE [OUTPUT_FILE]
 
-  Download a video from a supported platform (Twitter/X, YouTube, etc.).
+  Strip metadata from a PDF file.
 
-  Uses yt-dlp to download videos from a wide variety of websites. Twitter
-  "GIFs" are actually MP4 videos, which this tool can also download.
-
-  Arguments:
-
-      URL: The URL of the video page (e.g., Twitter post, YouTube video).
-
-  Examples:
-
-      uv run https://tools.ricardodecal.com/python/download_video.py
-      https://x.com/SemiAnalysis_/status/1990449859321888935
-
-      uv run https://tools.ricardodecal.com/python/download_video.py
-      https://www.youtube.com/watch?v=dQw4w9WgXcQ --output my_video.mp4
+  If OUTPUT_FILE is not provided, writes to 'stripped_<INPUT_FILE>'.
 
 Options:
-  -o, --output PATH  Output filepath (optional). Can be a file path or a
-                     directory path. Defaults to 'Title [ID].mp4' in current
-                     directory.
-  --help             Show this message and exit.
+  --help  Show this message and exit.
 ```
 
-### [ipynb_to_py_sphinx.py](python/ipynb_to_py_sphinx.py)
+</details>
+
+</details>
+
+<details>
+<summary><strong>🛠️ Dev</strong> (1 tool)</summary>
+
+<details>
+<summary><a href="python/ipynb_to_py_sphinx.py"><code>ipynb_to_py_sphinx.py</code></a></summary>
 
 Output of `uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py --help`:
 
@@ -187,46 +265,11 @@ Options:
   --help             Show this message and exit.
 ```
 
-### [strip_pdf_metadata.py](python/strip_pdf_metadata.py)
+</details>
 
-Output of `uv run https://tools.ricardodecal.com/python/strip_pdf_metadata.py --help`:
+</details>
 
-```text
-Usage: strip_pdf_metadata.py [OPTIONS] INPUT_FILE [OUTPUT_FILE]
-
-  Strip metadata from a PDF file.
-
-  If OUTPUT_FILE is not provided, writes to 'stripped_<INPUT_FILE>'.
-
-Options:
-  --help  Show this message and exit.
-```
-
-### [yt_transcript.py](python/yt_transcript.py)
-
-Output of `uv run https://tools.ricardodecal.com/python/yt_transcript.py --help`:
-
-```text
-Usage: yt_transcript.py [OPTIONS] URL [OUTPUT_FILE]
-
-  Download transcripts from a YouTube URL (video or playlist) to a single
-  file.
-
-  Arguments:
-      URL: YouTube video or playlist URL.
-      OUTPUT_FILE: Path to save the transcript text. Defaults to transcript.txt.
-
-  Examples:
-
-      uv run https://tools.ricardodecal.com/python/yt_transcript.py "https://youtu.be/..."
-      uv run https://tools.ricardodecal.com/python/yt_transcript.py "https://youtube.com/playlist?list=..." out.txt
-
-Options:
-  -l, --lang TEXT  Language codes to prefer (e.g. -l en -l fr)
-  --help           Show this message and exit.
-```
-
-
+<!-- TOOLS_END -->
 
 ## License
 
