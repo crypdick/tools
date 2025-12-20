@@ -335,7 +335,7 @@
 <p>Inspired by <a href="https://github.com/simonw/tools">Simon Willison's tools collection</a>.</p>
 <h2>Available Tools</h2>
 <details class="category">
-<summary><strong>📊 Data</strong> (2 tools)</summary>
+<summary><strong>📊 Data Processing</strong> (7 tools)</summary>
 
 <details class="tool">
 <summary><a href="python/convert_arrow_to_parquet_streaming.py"><code>convert_arrow_to_parquet_streaming.py</code></a></summary>
@@ -411,50 +411,6 @@ Options:
 </div>
 </details>
 
-</details>
-
-<details class="category">
-<summary><strong>🛠️ Dev</strong> (1 tool)</summary>
-
-<details class="tool">
-<summary><a href="python/ipynb_to_py_sphinx.py"><code>ipynb_to_py_sphinx.py</code></a></summary>
-<div class="content">
-Output of <code>uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py --help</code>:
-
-<pre><code>Usage: ipynb_to_py_sphinx.py [OPTIONS] NOTEBOOK
-
-  Convert a Jupyter notebook to a Sphinx Gallery Python script.
-
-  This tool converts a .ipynb file to a .py file formatted for Sphinx Gallery.
-  It converts Markdown cells to RST (using pypandoc) and comments them out,
-  while preserving code cells. It also handles magic commands by commenting
-  them out.
-
-  Based on: https://gist.github.com/chsasank/7218ca16f8d022e02a9c0deb94a310fe
-
-  Arguments:     NOTEBOOK: The path to the input Jupyter notebook (.ipynb).
-
-  Examples:
-
-      uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py
-      notebook.ipynb
-
-      uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py
-      notebook.ipynb --output my_gallery_script.py
-
-Options:
-  -o, --output PATH  Output Python file path. Defaults to notebook name with
-                     .py extension.
-  --help             Show this message and exit.
-</code></pre>
-</div>
-</details>
-
-</details>
-
-<details class="category">
-<summary><strong>📁 Files</strong> (2 tools)</summary>
-
 <details class="tool">
 <summary><a href="python/dedup_dirs.py"><code>dedup_dirs.py</code></a></summary>
 <div class="content">
@@ -499,28 +455,6 @@ Options:
 </details>
 
 <details class="tool">
-<summary><a href="python/strip_pdf_metadata.py"><code>strip_pdf_metadata.py</code></a></summary>
-<div class="content">
-Output of <code>uv run https://tools.ricardodecal.com/python/strip_pdf_metadata.py --help</code>:
-
-<pre><code>Usage: strip_pdf_metadata.py [OPTIONS] INPUT_FILE [OUTPUT_FILE]
-
-  Strip metadata from a PDF file.
-
-  If OUTPUT_FILE is not provided, writes to 'stripped_<INPUT_FILE>'.
-
-Options:
-  --help  Show this message and exit.
-</code></pre>
-</div>
-</details>
-
-</details>
-
-<details class="category">
-<summary><strong>🎬 Media</strong> (2 tools)</summary>
-
-<details class="tool">
 <summary><a href="python/download_video.py"><code>download_video.py</code></a></summary>
 <div class="content">
 Output of <code>uv run https://tools.ricardodecal.com/python/download_video.py --help</code>:
@@ -554,6 +488,59 @@ Options:
 </details>
 
 <details class="tool">
+<summary><a href="python/html_to_text.py"><code>html_to_text.py</code></a></summary>
+<div class="content">
+Output of <code>uv run https://tools.ricardodecal.com/python/html_to_text.py --help</code>:
+
+<pre><code>Usage: html_to_text.py [OPTIONS] URL
+
+  Fetch a webpage and convert its readable content to plain text.
+
+  Uses inscriptis to extract text from HTML while preserving basic structure.
+  Automatically adds https:// if no scheme is provided.
+
+  Arguments:
+
+      URL: The webpage URL to fetch (e.g., example.com or
+      https://example.com).
+
+  Examples:
+
+      uv run https://tools.ricardodecal.com/python/html_to_text.py example.com
+
+      uv run https://tools.ricardodecal.com/python/html_to_text.py
+      https://news.ycombinator.com --timeout 30
+
+      uv run https://tools.ricardodecal.com/python/html_to_text.py
+      wikipedia.org/wiki/Python --raw
+
+Options:
+  -t, --timeout INTEGER  Request timeout in seconds.
+  --raw                  Skip whitespace cleanup (preserve original
+                         formatting).
+  --help                 Show this message and exit.
+</code></pre>
+</div>
+</details>
+
+<details class="tool">
+<summary><a href="python/strip_pdf_metadata.py"><code>strip_pdf_metadata.py</code></a></summary>
+<div class="content">
+Output of <code>uv run https://tools.ricardodecal.com/python/strip_pdf_metadata.py --help</code>:
+
+<pre><code>Usage: strip_pdf_metadata.py [OPTIONS] INPUT_FILE [OUTPUT_FILE]
+
+  Strip metadata from a PDF file.
+
+  If OUTPUT_FILE is not provided, writes to 'stripped_<INPUT_FILE>'.
+
+Options:
+  --help  Show this message and exit.
+</code></pre>
+</div>
+</details>
+
+<details class="tool">
 <summary><a href="python/yt_transcript.py"><code>yt_transcript.py</code></a></summary>
 <div class="content">
 Output of <code>uv run https://tools.ricardodecal.com/python/yt_transcript.py --help</code>:
@@ -581,8 +568,86 @@ Options:
 
 </details>
 
+<details class="category">
+<summary><strong>🛠️ Development</strong> (2 tools)</summary>
+
+<details class="tool">
+<summary><a href="python/burn_iso.py"><code>burn_iso.py</code></a></summary>
+<div class="content">
+Output of <code>uv run https://tools.ricardodecal.com/python/burn_iso.py --help</code>:
+
+<pre><code>Usage: burn_iso.py [OPTIONS] ISO_FILE
+
+  Burn an ISO file to a USB drive with safety checks and progress monitoring.
+
+  This tool will verify the ISO file, check the target device, unmount any
+  mounted partitions, and burn the ISO using dd with progress reporting.
+
+  DANGER: This will completely erase all data on the target USB device!
+
+  Arguments:
+
+      ISO_FILE: Path to the ISO file to burn.
+
+  Examples:
+
+      uv run https://tools.ricardodecal.com/python/burn_iso.py --list
+
+      uv run https://tools.ricardodecal.com/python/burn_iso.py ubuntu.iso
+      --device /dev/sdb --dry-run
+
+      uv run https://tools.ricardodecal.com/python/burn_iso.py
+      ~/Downloads/debian.iso -d /dev/sdc
+
+Options:
+  -d, --device TEXT  USB device path (e.g., /dev/sdb). Use --list to see
+                     available devices.  [required]
+  --list             List available block devices and exit.
+  -n, --dry-run      Show what would be done without actually doing it.
+  -f, --force        Skip confirmation prompts.
+  --help             Show this message and exit.
+</code></pre>
+</div>
+</details>
+
+<details class="tool">
+<summary><a href="python/ipynb_to_py_sphinx.py"><code>ipynb_to_py_sphinx.py</code></a></summary>
+<div class="content">
+Output of <code>uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py --help</code>:
+
+<pre><code>Usage: ipynb_to_py_sphinx.py [OPTIONS] NOTEBOOK
+
+  Convert a Jupyter notebook to a Sphinx Gallery Python script.
+
+  This tool converts a .ipynb file to a .py file formatted for Sphinx Gallery.
+  It converts Markdown cells to RST (using pypandoc) and comments them out,
+  while preserving code cells. It also handles magic commands by commenting
+  them out.
+
+  Based on: https://gist.github.com/chsasank/7218ca16f8d022e02a9c0deb94a310fe
+
+  Arguments:     NOTEBOOK: The path to the input Jupyter notebook (.ipynb).
+
+  Examples:
+
+      uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py
+      notebook.ipynb
+
+      uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py
+      notebook.ipynb --output my_gallery_script.py
+
+Options:
+  -o, --output PATH  Output Python file path. Defaults to notebook name with
+                     .py extension.
+  --help             Show this message and exit.
+</code></pre>
+</div>
+</details>
+
+</details>
+
         <footer>
-            <p>Made by Ricardo Decal • Updated December 19, 2025</p>
+            <p>Made by Ricardo Decal • Updated December 20, 2025</p>
             <p>
                 <a href="https://ricardodecal.com">ricardodecal.com</a> |
                 <a href="https://github.com/crypdick/tools">View on GitHub</a> |
