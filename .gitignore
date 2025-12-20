@@ -58,3 +58,4 @@ Thumbs.db
 .devtools/
 .cursor
 .claude
+.envrc
