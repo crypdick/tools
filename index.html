@@ -373,36 +373,45 @@
 <div class="content">
 Output of <code>uv run https://tools.ricardodecal.com/python/convert_arrow_to_parquet_streaming.py --help</code>:
 
-<pre><code>Usage: convert_arrow_to_parquet_streaming.py [OPTIONS]
+<pre><code>
+ Usage: convert_arrow_to_parquet_streaming.py [OPTIONS]
 
-  Convert Arrow shards to Parquet.
+ Convert Arrow shards to Parquet.
 
-  - Discovers all .arrow files under a given source directory - Converts each
-  file to Parquet - Uses streaming in order to keep memory bounded and convert
-  files larger than available RAM - Handles both Arrow IPC File and Stream
-  formats (tries file, falls back to stream)
+ - Discovers all .arrow files under a given source directory
+ - Converts each file to Parquet
+ - Uses streaming in order to keep memory bounded and convert files larger than
+ available RAM
+ - Handles both Arrow IPC File and Stream formats (tries file, falls back to
+ stream)
 
-  Notes: - Use `--preserve-subdirs` to mirror the input directory tree under
-  the output dir. - Use `--overwrite` to re-create files; otherwise existing
-  outputs are skipped.
+ Notes:
+ - Use --preserve-subdirs to mirror the input directory tree under the output
+ dir.
+ - Use --overwrite to re-create files; otherwise existing outputs are skipped.
 
-  Arguments:
-      SOURCE_DIR: Directory containing .arrow files.
-      OUTPUT_DIR: Directory to write .parquet files.
+ Arguments:
+     SOURCE_DIR: Directory containing .arrow files.
+     OUTPUT_DIR: Directory to write .parquet files.
 
-  Examples:
+ Examples:
 
-      uv run https://tools.ricardodecal.com/python/convert_arrow_to_parquet_streaming.py --source-dir ./arrow_data --output-dir ./parquet_data
-      uv run https://tools.ricardodecal.com/python/convert_arrow_to_parquet_streaming.py --source-dir ./arrow_data --output-dir ./parquet_data --preserve-subdirs
+     uv run https://tools.ricardodecal.com/python/convert_arrow_to_parquet_streaming.py --source-dir
+ ./arrow_data --output-dir ./parquet_data
 
-Options:
-  --source-dir DIRECTORY  Directory containing .arrow files  [required]
-  --output-dir DIRECTORY  Directory to write .parquet files
-  --overwrite             Overwrite existing parquet files
-  --preserve-subdirs      Preserve input subdirectory structure inside output
-                          dir
-  --help                  Show this message and exit.
-</code></pre>
+     uv run https://tools.ricardodecal.com/python/convert_arrow_to_parquet_streaming.py --source-dir
+ ./arrow_data --output-dir ./parquet_data --preserve-subdirs
+
+╭─ Options ────────────────────────────────────────────────────────────────────╮
+│ *  --source-dir              DIRECTORY  Directory containing .arrow files    │
+│                                         [required]                           │
+│    --output-dir              DIRECTORY  Directory to write .parquet files    │
+│                                         [default: parq_convert]              │
+│    --overwrite                          Overwrite existing parquet files     │
+│    --preserve-subdirs                   Preserve input subdirectory          │
+│                                         structure inside output dir          │
+│    --help                               Show this message and exit.          │
+╰──────────────────────────────────────────────────────────────────────────────╯</code></pre>
 </div>
 </details>
 
@@ -411,34 +420,41 @@ Options:
 <div class="content">
 Output of <code>uv run https://tools.ricardodecal.com/python/count_parquet_rows.py --help</code>:
 
-<pre><code>Usage: count_parquet_rows.py [OPTIONS] DATASET_PATH
+<pre><code>
+ Usage: count_parquet_rows.py [OPTIONS] DATASET_PATH
 
-  Count the number of rows in a parquet file/dataset without reading data into
-  memory.
+ Count the number of rows in a parquet file/dataset without reading data into
+ memory.
 
-  Works by reading just the metadata headers. Supports: - Single parquet files
-  - Directories of parquet shards - Hive-style partitioned datasets - Local
-  paths and S3 URIs
+ Works by reading just the metadata headers. Supports:
+ - Single parquet files
+ - Directories of parquet shards
+ - Hive-style partitioned datasets
+ - Local paths and S3 URIs
 
-  Arguments:     DATASET_PATH: Local file path or S3 URI to the parquet
-  dataset.
+ Arguments:
+     DATASET_PATH: Local file path or S3 URI to the parquet dataset.
 
-  Examples:
+ Examples:
 
-      # Local file     uv run
-      https://tools.ricardodecal.com/python/count_parquet_rows.py
-      ./data.parquet
+     # Local file
+     uv run https://tools.ricardodecal.com/python/count_parquet_rows.py
+ ./data.parquet
 
-      # Directory of shards     uv run
-      https://tools.ricardodecal.com/python/count_parquet_rows.py ./data_dir/
+     # Directory of shards
+     uv run https://tools.ricardodecal.com/python/count_parquet_rows.py
+ ./data_dir/
 
-      # S3 URI     uv run
-      https://tools.ricardodecal.com/python/count_parquet_rows.py s3://my-
-      bucket/data.parquet
+     # S3 URI
+     uv run https://tools.ricardodecal.com/python/count_parquet_rows.py
+ s3://my-bucket/data.parquet
 
-Options:
-  --help  Show this message and exit.
-</code></pre>
+╭─ Arguments ──────────────────────────────────────────────────────────────────╮
+│ *    dataset_path      TEXT  Local file path or S3 URI. [required]           │
+╰──────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────╮
+│ --help          Show this message and exit.                                  │
+╰──────────────────────────────────────────────────────────────────────────────╯</code></pre>
 </div>
 </details>
 
@@ -447,41 +463,51 @@ Options:
 <div class="content">
 Output of <code>uv run https://tools.ricardodecal.com/python/dedup_dirs.py --help</code>:
 
-<pre><code>Usage: dedup_dirs.py [OPTIONS] OLD_DIR NEW_DIR
+<pre><code>
+ Usage: dedup_dirs.py [OPTIONS] OLD_DIR NEW_DIR
 
-  Find duplicate files between OLD_DIR and NEW_DIR, optionally deleting from
-  OLD_DIR.
+ Find duplicate files between OLD_DIR and NEW_DIR, optionally deleting from
+ OLD_DIR.
 
-  Compares files by path and content. For large files (&gt;10MB), uses sampling
-  for speed. For smaller files, compares MD5 hashes. Runs in parallel for
-  performance on large directory trees.
+ Compares files by path and content. For large files (&gt;10MB), uses sampling
+ for speed. For smaller files, compares MD5 hashes. Runs in parallel for
+ performance on large directory trees.
 
-  Without --delete, runs in dry-run mode showing what would be deleted. With
-  --delete, removes identical files from OLD_DIR and cleans up empty
-  directories.
+ Without --delete, runs in dry-run mode showing what would be deleted.
+ With --delete, removes identical files from OLD_DIR and cleans up empty
+ directories.
 
-  Arguments:     OLD_DIR: Source directory to deduplicate (files deleted from
-  here).     NEW_DIR: Reference directory to compare against (untouched).
+ Arguments:
+     OLD_DIR: Source directory to deduplicate (files deleted from here).
+     NEW_DIR: Reference directory to compare against (untouched).
 
-  Examples:
+ Examples:
 
-      # Dry run - see what would be deleted     uv run
-      https://tools.ricardodecal.com/python/dedup_dirs.py ~/old-backup ~/new-
-      backup
+     # Dry run - see what would be deleted
+     uv run https://tools.ricardodecal.com/python/dedup_dirs.py ~/old-backup
+ ~/new-backup
 
-      # Actually delete duplicates     uv run
-      https://tools.ricardodecal.com/python/dedup_dirs.py ~/old-backup ~/new-
-      backup --delete
+     # Actually delete duplicates
+     uv run https://tools.ricardodecal.com/python/dedup_dirs.py ~/old-backup
+ ~/new-backup --delete
 
-      # Use more workers for faster processing     uv run
-      https://tools.ricardodecal.com/python/dedup_dirs.py ~/old ~/new --delete
-      -w 16
+     # Use more workers for faster processing
+     uv run https://tools.ricardodecal.com/python/dedup_dirs.py ~/old ~/new
+ --delete -w 16
 
-Options:
-  --delete               Actually delete identical files (default is dry run).
-  -w, --workers INTEGER  Number of parallel workers.
-  --help                 Show this message and exit.
-</code></pre>
+╭─ Arguments ──────────────────────────────────────────────────────────────────╮
+│ *    old_dir      PATH  Source directory to deduplicate (files deleted from  │
+│                         here).                                               │
+│                         [required]                                           │
+│ *    new_dir      PATH  Reference directory to compare against (untouched).  │
+│                         [required]                                           │
+╰──────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────╮
+│ --delete                    Actually delete identical files (default is dry  │
+│                             run).                                            │
+│ --workers  -w      INTEGER  Number of parallel workers. [default: 8]         │
+│ --help                      Show this message and exit.                      │
+╰──────────────────────────────────────────────────────────────────────────────╯</code></pre>
 </div>
 </details>
 
@@ -490,31 +516,34 @@ Options:
 <div class="content">
 Output of <code>uv run https://tools.ricardodecal.com/python/download_video.py --help</code>:
 
-<pre><code>Usage: download_video.py [OPTIONS] URL
+<pre><code>
+ Usage: download_video.py [OPTIONS] URL
 
-  Download a video from a supported platform (Twitter/X, YouTube, etc.).
+ Download a video from a supported platform (Twitter/X, YouTube, etc.).
 
-  Uses yt-dlp to download videos from a wide variety of websites. Twitter
-  &quot;GIFs&quot; are actually MP4 videos, which this tool can also download.
+ Uses yt-dlp to download videos from a wide variety of websites.
+ Twitter &quot;GIFs&quot; are actually MP4 videos, which this tool can also download.
 
-  Arguments:
+ Arguments:
 
-      URL: The URL of the video page (e.g., Twitter post, YouTube video).
+     URL: The URL of the video page (e.g., Twitter post, YouTube video).
 
-  Examples:
+ Examples:
 
-      uv run https://tools.ricardodecal.com/python/download_video.py
-      https://x.com/SemiAnalysis_/status/1990449859321888935
+     uv run https://tools.ricardodecal.com/python/download_video.py
+ https://x.com/SemiAnalysis_/status/1990449859321888935
 
-      uv run https://tools.ricardodecal.com/python/download_video.py
-      https://www.youtube.com/watch?v=dQw4w9WgXcQ --output my_video.mp4
+     uv run https://tools.ricardodecal.com/python/download_video.py
+ https://www.youtube.com/watch?v=dQw4w9WgXcQ --output my_video.mp4
 
-Options:
-  -o, --output PATH  Output filepath (optional). Can be a file path or a
-                     directory path. Defaults to &#x27;Title [ID].mp4&#x27; in current
-                     directory.
-  --help             Show this message and exit.
-</code></pre>
+╭─ Arguments ──────────────────────────────────────────────────────────────────╮
+│ *    url      TEXT  The URL of the video page. [required]                    │
+╰──────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────╮
+│ --output  -o      TEXT  Output filepath (file or directory). Defaults to     │
+│                         &#x27;Title [ID].mp4&#x27; in current directory.               │
+│ --help                  Show this message and exit.                          │
+╰──────────────────────────────────────────────────────────────────────────────╯</code></pre>
 </div>
 </details>
 
@@ -528,34 +557,56 @@ Options:
 <div class="content">
 Output of <code>uv run https://tools.ricardodecal.com/python/html_to_text.py --help</code>:
 
-<pre><code>Usage: html_to_text.py [OPTIONS] URL
+<pre><code>
+ Usage: html_to_text.py [OPTIONS] URL
 
-  Fetch a webpage and convert its readable content to plain text.
+ Fetch a webpage and convert its readable content to plain text.
 
-  Uses inscriptis to extract text from HTML while preserving basic structure.
-  Automatically adds https:// if no scheme is provided.
+ Uses Readability-style boilerplate removal by default, with conservative
+ fallbacks.
+ Then uses inscriptis to render HTML to text while preserving basic structure.
+ Automatically adds https:// if no scheme is provided.
 
-  Arguments:
+ Arguments:
 
-      URL: The webpage URL to fetch (e.g., example.com or
-      https://example.com).
+     URL: The webpage URL to fetch (e.g., example.com or https://example.com).
 
-  Examples:
+ Examples:
 
-      uv run https://tools.ricardodecal.com/python/html_to_text.py example.com
+     uv run https://tools.ricardodecal.com/python/html_to_text.py example.com
 
-      uv run https://tools.ricardodecal.com/python/html_to_text.py
-      https://news.ycombinator.com --timeout 30
+     uv run https://tools.ricardodecal.com/python/html_to_text.py
+ https://news.ycombinator.com --timeout 30
 
-      uv run https://tools.ricardodecal.com/python/html_to_text.py
-      wikipedia.org/wiki/Python --raw
+     uv run https://tools.ricardodecal.com/python/html_to_text.py
+ wikipedia.org/wiki/Python --raw
 
-Options:
-  -t, --timeout INTEGER  Request timeout in seconds.
-  --raw                  Skip whitespace cleanup (preserve original
-                         formatting).
-  --help                 Show this message and exit.
-</code></pre>
+╭─ Arguments ──────────────────────────────────────────────────────────────────╮
+│ *    url      TEXT  The webpage URL to fetch. [required]                     │
+╰──────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────╮
+│ --timeout    -t      INTEGER                     Request timeout in seconds. │
+│                                                  [default: 15]               │
+│ --mode       -m      [auto|readability|heuristi  Extraction mode: auto       │
+│                      c|full]                     (default), readability      │
+│                                                  (boilerplate removal),      │
+│                                                  heuristic (semantic tags),  │
+│                                                  or full (whole page).       │
+│                                                  [default: auto]             │
+│ --min-chars          INTEGER RANGE [x&gt;=0]        Minimum extracted text      │
+│                                                  length to accept before     │
+│                                                  falling back (auto mode).   │
+│                                                  [default: 200]              │
+│ --min-ratio          FLOAT RANGE [0.0&lt;=x&lt;=1.0]   Minimum extracted/full text │
+│                                                  length ratio to accept      │
+│                                                  before falling back (auto   │
+│                                                  mode).                      │
+│                                                  [default: 0.2]              │
+│ --raw                                            Skip whitespace cleanup     │
+│                                                  (preserve original          │
+│                                                  formatting).                │
+│ --help                                           Show this message and exit. │
+╰──────────────────────────────────────────────────────────────────────────────╯</code></pre>
 </div>
 </details>
 
@@ -569,15 +620,21 @@ Options:
 <div class="content">
 Output of <code>uv run https://tools.ricardodecal.com/python/strip_pdf_metadata.py --help</code>:
 
-<pre><code>Usage: strip_pdf_metadata.py [OPTIONS] INPUT_FILE [OUTPUT_FILE]
+<pre><code>
+ Usage: strip_pdf_metadata.py [OPTIONS] INPUT_FILE [OUTPUT_FILE]
 
-  Strip metadata from a PDF file.
+ Strip metadata from a PDF file.
 
-  If OUTPUT_FILE is not provided, writes to &#x27;stripped_&lt;INPUT_FILE&gt;&#x27;.
+ If OUTPUT_FILE is not provided, writes to &#x27;stripped_&lt;INPUT_FILE&gt;&#x27;.
 
-Options:
-  --help  Show this message and exit.
-</code></pre>
+╭─ Arguments ──────────────────────────────────────────────────────────────────╮
+│ *    input_file       FILE           Input PDF file. [required]              │
+│      output_file      [OUTPUT_FILE]  Output PDF file. Defaults to            │
+│                                      &#x27;stripped_&lt;INPUT_FILE&gt;&#x27;.                │
+╰──────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────╮
+│ --help          Show this message and exit.                                  │
+╰──────────────────────────────────────────────────────────────────────────────╯</code></pre>
 </div>
 </details>
 
@@ -586,24 +643,32 @@ Options:
 <div class="content">
 Output of <code>uv run https://tools.ricardodecal.com/python/yt_transcript.py --help</code>:
 
-<pre><code>Usage: yt_transcript.py [OPTIONS] URL [OUTPUT_FILE]
+<pre><code>
+ Usage: yt_transcript.py [OPTIONS] URL [OUTPUT_FILE]
 
-  Download transcripts from a YouTube URL (video or playlist) to a single
-  file.
+ Download transcripts from a YouTube URL (video or playlist) to a single file.
 
-  Arguments:
-      URL: YouTube video or playlist URL.
-      OUTPUT_FILE: Path to save the transcript text. Defaults to transcript.txt.
+ Arguments:
+     URL: YouTube video or playlist URL.
+     OUTPUT_FILE: Path to save the transcript text. Defaults to transcript.txt.
 
-  Examples:
+ Examples:
 
-      uv run https://tools.ricardodecal.com/python/yt_transcript.py &quot;https://youtu.be/...&quot;
-      uv run https://tools.ricardodecal.com/python/yt_transcript.py &quot;https://youtube.com/playlist?list=...&quot; out.txt
+     uv run https://tools.ricardodecal.com/python/yt_transcript.py &quot;https://youtu.be/...&quot;
 
-Options:
-  -l, --lang TEXT  Language codes to prefer (e.g. -l en -l fr)
-  --help           Show this message and exit.
-</code></pre>
+     uv run https://tools.ricardodecal.com/python/yt_transcript.py &quot;https://youtube.com/playlist?list=...&quot;
+ out.txt
+
+╭─ Arguments ──────────────────────────────────────────────────────────────────╮
+│ *    url              TEXT           YouTube video or playlist URL.          │
+│                                      [required]                              │
+│      output_file      [OUTPUT_FILE]  Path to save the transcript text.       │
+│                                      Defaults to transcript.txt.             │
+╰──────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────╮
+│ --lang  -l      TEXT  Language codes to prefer (e.g. -l en -l fr)            │
+│ --help                Show this message and exit.                            │
+╰──────────────────────────────────────────────────────────────────────────────╯</code></pre>
 </div>
 </details>
 
@@ -617,37 +682,41 @@ Options:
 <div class="content">
 Output of <code>uv run https://tools.ricardodecal.com/python/burn_iso.py --help</code>:
 
-<pre><code>Usage: burn_iso.py [OPTIONS] ISO_FILE
+<pre><code>
+ Usage: burn_iso.py [OPTIONS] ISO_FILE
 
-  Burn an ISO file to a USB drive with safety checks and progress monitoring.
+ Burn an ISO file to a USB drive with safety checks and progress monitoring.
 
-  This tool will verify the ISO file, check the target device, unmount any
-  mounted partitions, and burn the ISO using dd with progress reporting.
+ This tool will verify the ISO file, check the target device, unmount any
+ mounted partitions, and burn the ISO using dd with progress reporting.
 
-  DANGER: This will completely erase all data on the target USB device!
+ DANGER: This will completely erase all data on the target USB device!
 
-  Arguments:
+ Arguments:
 
-      ISO_FILE: Path to the ISO file to burn.
+     ISO_FILE: Path to the ISO file to burn.
 
-  Examples:
+ Examples:
 
-      uv run https://tools.ricardodecal.com/python/burn_iso.py --list
+     uv run https://tools.ricardodecal.com/python/burn_iso.py --list
 
-      uv run https://tools.ricardodecal.com/python/burn_iso.py ubuntu.iso
-      --device /dev/sdb --dry-run
+     uv run https://tools.ricardodecal.com/python/burn_iso.py ubuntu.iso
+ --device /dev/sdb --dry-run
 
-      uv run https://tools.ricardodecal.com/python/burn_iso.py
-      ~/Downloads/debian.iso -d /dev/sdc
+     uv run https://tools.ricardodecal.com/python/burn_iso.py
+ ~/Downloads/debian.iso -d /dev/sdc
 
-Options:
-  -d, --device TEXT  USB device path (e.g., /dev/sdb). Use --list to see
-                     available devices.  [required]
-  --list             List available block devices and exit.
-  -n, --dry-run      Show what would be done without actually doing it.
-  -f, --force        Skip confirmation prompts.
-  --help             Show this message and exit.
-</code></pre>
+╭─ Arguments ──────────────────────────────────────────────────────────────────╮
+│ *    iso_file      FILE  Path to the ISO file to burn. [required]            │
+╰──────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────╮
+│ --device   -d      TEXT  USB device path (e.g., /dev/sdb). Use --list to see │
+│                          available devices.                                  │
+│ --list                   List available block devices and exit.              │
+│ --dry-run  -n            Show what would be done without actually doing it.  │
+│ --force    -f            Skip confirmation prompts.                          │
+│ --help                   Show this message and exit.                         │
+╰──────────────────────────────────────────────────────────────────────────────╯</code></pre>
 </div>
 </details>
 
@@ -656,39 +725,45 @@ Options:
 <div class="content">
 Output of <code>uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py --help</code>:
 
-<pre><code>Usage: ipynb_to_py_sphinx.py [OPTIONS] NOTEBOOK
+<pre><code>
+ Usage: ipynb_to_py_sphinx.py [OPTIONS] NOTEBOOK
 
-  Convert a Jupyter notebook to a Sphinx Gallery Python script.
+ Convert a Jupyter notebook to a Sphinx Gallery Python script.
 
-  This tool converts a .ipynb file to a .py file formatted for Sphinx Gallery.
-  It converts Markdown cells to RST (using pypandoc) and comments them out,
-  while preserving code cells. It also handles magic commands by commenting
-  them out.
+ This tool converts a .ipynb file to a .py file formatted for Sphinx Gallery.
+ It converts Markdown cells to RST (using pypandoc) and comments them out,
+ while preserving code cells. It also handles magic commands by commenting them
+ out.
 
-  Based on: https://gist.github.com/chsasank/7218ca16f8d022e02a9c0deb94a310fe
+ Based on: https://gist.github.com/chsasank/7218ca16f8d022e02a9c0deb94a310fe
 
-  Arguments:     NOTEBOOK: The path to the input Jupyter notebook (.ipynb).
+ Arguments:
+     NOTEBOOK: The path to the input Jupyter notebook (.ipynb).
 
-  Examples:
+ Examples:
 
-      uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py
-      notebook.ipynb
+     uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py
+ notebook.ipynb
 
-      uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py
-      notebook.ipynb --output my_gallery_script.py
+     uv run https://tools.ricardodecal.com/python/ipynb_to_py_sphinx.py
+ notebook.ipynb --output my_gallery_script.py
 
-Options:
-  -o, --output PATH  Output Python file path. Defaults to notebook name with
-                     .py extension.
-  --help             Show this message and exit.
-</code></pre>
+╭─ Arguments ──────────────────────────────────────────────────────────────────╮
+│ *    notebook      PATH  The path to the input Jupyter notebook (.ipynb).    │
+│                          [required]                                          │
+╰──────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────╮
+│ --output  -o      PATH  Output Python file path. Defaults to notebook name   │
+│                         with .py extension.                                  │
+│ --help                  Show this message and exit.                          │
+╰──────────────────────────────────────────────────────────────────────────────╯</code></pre>
 </div>
 </details>
 
 </details>
 
         <footer>
-            <p>Made by Ricardo Decal • Updated December 20, 2025</p>
+            <p>Made by Ricardo Decal • Updated January 06, 2026</p>
             <p>
                 <a href="https://ricardodecal.com">ricardodecal.com</a> |
                 <a href="https://github.com/crypdick/tools">View on GitHub</a> |
