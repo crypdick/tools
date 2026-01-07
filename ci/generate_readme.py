@@ -38,6 +38,12 @@ TYPE_LABELS = {
 }
 
 
+def strip_trailing_whitespace(text: str) -> str:
+    """Strip trailing whitespace from each line and ensure a single trailing newline."""
+    lines = [line.rstrip() for line in text.splitlines()]
+    return "\n".join(lines) + "\n"
+
+
 class ToolInfo(NamedTuple):
     name: str
     filename: str
@@ -174,7 +180,7 @@ def extract_python_tool_info(path: Path) -> ToolInfo:
 
 def extract_html_tool_info(path: Path) -> ToolInfo:
     """Extract info from an HTML tool."""
-    category, title, description = extract_html_metadata(path)
+    category, _title, description = extract_html_metadata(path)
 
     return ToolInfo(
         name=path.stem,
@@ -188,7 +194,9 @@ def extract_html_tool_info(path: Path) -> ToolInfo:
 
 def format_python_tool_readme(info: ToolInfo) -> str:
     """Format a Python tool for the README."""
-    doc = info.help_output
+    # Click/Typer help output can contain line-ending padding spaces; remove them
+    # so our README doesn't trip the trailing-whitespace pre-commit hook.
+    doc = strip_trailing_whitespace(info.help_output).rstrip("\n")
 
     # Replace generic "uv run python/script.py" with nifty domain URL
     pattern = re.compile(rf"uv run python/{re.escape(info.filename)}")
@@ -311,6 +319,7 @@ def generate_readme() -> None:
         + "\n"
         + content[end_idx:]
     )
+    new_content = strip_trailing_whitespace(new_content)
 
     # Check if README exists and differs
     current_content = ""
